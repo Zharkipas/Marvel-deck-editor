@@ -33,7 +33,7 @@
         <h1 class="text-xl font-black tracking-tight text-white flex items-center gap-2 uppercase font-mono">
           Marvel Hero Rush <span class="text-xs bg-slate-800 text-amber-400 px-2.5 py-0.5 rounded-md border border-slate-700 font-medium">50 Cards • Max 2 Colors</span>
         </h1>
-        <p class="text-xs text-slate-400">Levels 1–6 • Max 3 Copies/Card • 233 Official Cards Loaded</p>
+        <p class="text-xs text-slate-400">Levels 1–6 • Max 3 Copies/Card • Auto-Read Excel & Embedded Catalog</p>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
         <div class="flex items-center gap-3">
           <div class="relative flex-1">
             <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
-            <input type="text" id="search-input" placeholder="Search 233 card names..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-slate-500" />
+            <input type="text" id="search-input" placeholder="Search card names..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-slate-500" />
           </div>
 
           <!-- Card Size Buttons -->
@@ -208,9 +208,8 @@
     </div>
   </div>
 
-  <!-- Excel File Auto-Loader Script -->
   <script>
-    // Load Excel file directly or fallback to built-in JSON
+    // Active Card Database
     let CARD_DATABASE = [];
 
     const MAX_DECK_SIZE = 50;
@@ -256,34 +255,49 @@
       cardSize: 'large',
       drawnHand: [],
       
-      init() {
+      async init() {
         this.setupEventListeners();
-        this.loadDefaultExcelOrFallback();
+        await this.autoReadLocalExcel();
       },
 
-      async loadDefaultExcelOrFallback() {
-        // Automatically attempt to fetch the companion excel file if served via web server
-        try {
-          const res = await fetch('marvel_hero_rush_cards (2) (1).xlsx');
-          if (res.ok) {
-            const blob = await res.arrayBuffer();
-            const workbook = XLSX.read(new Uint8Array(blob), { type: 'array' });
-            const sheet = workbook.Sheets[workbook.SheetNames[0]];
-            const rows = XLSX.utils.sheet_to_json(sheet);
-            CARD_DATABASE = rows.map((row, idx) => ({
-              id: `mhr-${idx+1}`,
-              name: String(row['Card Name'] || row.Name || `Card ${idx+1}`).trim(),
-              level: parseInt(row.Level || 1, 10),
-              color: String(row.Colour || row.Color || 'Red').trim().charAt(0).toUpperCase() + String(row.Colour || row.Color || 'Red').trim().slice(1).toLowerCase(),
-              set: String(row['Card Set'] || row.Set || 'BP01').trim(),
-              image: String(row['Card Image'] || row.Image || '').trim()
-            }));
-            this.renderAll();
-            return;
-          }
-        } catch (e) {}
+      // Automatically checks and reads companion Excel files in the same folder
+      async autoReadLocalExcel() {
+        const potentialFileNames = [
+          'marvel_hero_rush_cards.xlsx',
+          'marvel_hero_rush_cards (2) (1).xlsx',
+          'marvel_hero_rush_cards.csv',
+          'cards.xlsx',
+          'cards.csv'
+        ];
 
-        // Fallback: render catalog UI
+        for (const filename of potentialFileNames) {
+          try {
+            const response = await fetch(filename);
+            if (response.ok) {
+              const buffer = await response.arrayBuffer();
+              const workbook = XLSX.read(new Uint8Array(buffer), { type: 'array' });
+              const sheetName = workbook.SheetNames[0];
+              const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+              if (rows && rows.length > 0) {
+                console.log(`Auto-loaded cards from local file: ${filename}`);
+                CARD_DATABASE = rows.map((row, idx) => ({
+                  id: `mhr-${idx + 1}`,
+                  name: String(row['Card Name'] || row.Name || `Card ${idx + 1}`).trim(),
+                  level: parseInt(row.Level || 1, 10),
+                  color: String(row.Colour || row.Color || 'Red').trim().charAt(0).toUpperCase() + String(row.Colour || row.Color || 'Red').trim().slice(1).toLowerCase(),
+                  set: String(row['Card Set'] || row.Set || 'BP01').trim(),
+                  image: String(row['Card Image'] || row.Image || '').trim()
+                }));
+                this.renderAll();
+                this.showToast(`Auto-loaded ${CARD_DATABASE.length} cards from ${filename}`);
+                return;
+              }
+            }
+          } catch (e) {
+            // If opened directly via file://, browser sandbox prevents fetch
+          }
+        }
         this.renderAll();
       },
 
@@ -619,7 +633,7 @@
           container.innerHTML = `
             <div class="col-span-full py-20 text-center text-slate-500 flex flex-col items-center gap-2">
               <i data-lucide="inbox" class="w-10 h-10 stroke-1"></i>
-              <p class="text-sm">No cards loaded yet. Click <strong>Upload Excel</strong> to select your spreadsheet.</p>
+              <p class="text-sm">No cards loaded yet. Place your Excel file in the folder or click <strong>Upload Excel</strong>.</p>
             </div>`;
           return;
         }
