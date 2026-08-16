@@ -11,7 +11,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- SheetJS for live Excel (.xlsx / .csv) importing -->
+  <!-- SheetJS for optional extra Excel (.xlsx / .csv) importing -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <style>
@@ -33,7 +33,7 @@
         <h1 class="text-xl font-black tracking-tight text-white flex items-center gap-2 uppercase font-mono">
           Marvel Hero Rush <span class="text-xs bg-slate-800 text-amber-400 px-2.5 py-0.5 rounded-md border border-slate-700 font-medium">50 Cards • Max 2 Colors</span>
         </h1>
-        <p class="text-xs text-slate-400">Levels 1–6 • Max 3 Copies/Card • Auto-Read Excel & Embedded Catalog</p>
+        <p class="text-xs text-slate-400">Levels 1–6 • Max 3 Copies/Card • 233 Cards Built-in</p>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
         <div class="flex items-center gap-3">
           <div class="relative flex-1">
             <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
-            <input type="text" id="search-input" placeholder="Search card names..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-slate-500" />
+            <input type="text" id="search-input" placeholder="Search 233 card names..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-slate-500" />
           </div>
 
           <!-- Card Size Buttons -->
@@ -209,8 +209,1875 @@
   </div>
 
   <script>
-    // Active Card Database
-    let CARD_DATABASE = [];
+    // ==========================================
+    // 1. ALL 233 CARDS DIRECTLY EMBEDDED
+    // ==========================================
+    let CARD_DATABASE = [
+  {
+    "id": "mhr-1",
+    "name": "「Antimatter」Iron Man",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74579b9da74fc0904ea27c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:-HY5aEIYHdHtQabc0oRibSy93hw="
+  },
+  {
+    "id": "mhr-2",
+    "name": "「Antimatter」Iron Man",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a73ff299da74fc0904e9ff6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:fAtSyQ1jiemVByH-27VdeoV75GI="
+  },
+  {
+    "id": "mhr-3",
+    "name": "「Antimatter」Iron Man",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7455819da74fc0904ea26b?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:7OHhus4ipcY1IlClqcz6axEUtrw="
+  },
+  {
+    "id": "mhr-4",
+    "name": "「Covert Ops」Black Widow",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74579e9da74fc0904ea27e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:aNTUJ6NS9mW-asnp2BC9bABD2I8="
+  },
+  {
+    "id": "mhr-5",
+    "name": "「Covert Ops」Black Widow",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a73ff419da74fc0904e9ff8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:yA2_lyNqld7OOlzdwuwZhZZX2Js="
+  },
+  {
+    "id": "mhr-6",
+    "name": "「Thunder Ally」Thor",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7457a29da74fc0904ea280?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:3sLtAqIbACJ_kMCU2cCoxzmPb3I="
+  },
+  {
+    "id": "mhr-7",
+    "name": "「Thunder Ally」Thor",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7455879da74fc0904ea26d?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Yh9QlN9jm7HbS_1SPnzmENx7BVc="
+  },
+  {
+    "id": "mhr-8",
+    "name": "「Thunder Ally」Thor",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a73ff4d9da74fc0904e9ffa?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:FnBHmUcM75MAFe6csVAyvQ-fuvs="
+  },
+  {
+    "id": "mhr-9",
+    "name": "「Never Back Down」Hulk",
+    "level": 2,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7409bd9da74fc0904ea188?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Mmc0_7X3AQYJ4Kjz-OboT2HpoCI="
+  },
+  {
+    "id": "mhr-10",
+    "name": "「Never Back Down」Hulk",
+    "level": 2,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7457a59da74fc0904ea282?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:1Lb3_bO98VkvdaTWrEyIqRI9aGE="
+  },
+  {
+    "id": "mhr-11",
+    "name": "「Red Room Experiment Subject」Black Widow",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7409c59da74fc0904ea18a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:4118fPoGCqT-xZRqgpx3_2XjuJw="
+  },
+  {
+    "id": "mhr-12",
+    "name": "「Silent Hunter」Black Panther",
+    "level": 5,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7457aa9da74fc0904ea284?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:52-fQZJ8oBpYfZuJqmsR-teaxW4="
+  },
+  {
+    "id": "mhr-13",
+    "name": "「Silent Hunter」Black Panther",
+    "level": 5,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7409cc9da74fc0904ea18c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:dHOsg6_TJDPqGGsL4y3rbo3jL4M="
+  },
+  {
+    "id": "mhr-14",
+    "name": "「Void Reforge」Vision",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7457ad9da74fc0904ea286?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:XnzfGf_Equnqtoc1uYhiIfwDqXM="
+  },
+  {
+    "id": "mhr-15",
+    "name": "「Void Reforge」Vision",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7409d79da74fc0904ea18e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:x-OG6N9hGGwqT9E5y6dTBPmpmVc="
+  },
+  {
+    "id": "mhr-16",
+    "name": "「Pulse Uninstall」War Machine",
+    "level": 1,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7409e79da74fc0904ea190?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:VyhESCtgyGGw3XEzcrW_kLlaI58="
+  },
+  {
+    "id": "mhr-17",
+    "name": "「Pulse Assembler」Iron Man",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7409ec9da74fc0904ea192?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:euTHh6kxM-PzmPj1s0yDbb3gOkY="
+  },
+  {
+    "id": "mhr-18",
+    "name": "「Evolution Protocol」Ultron",
+    "level": 1,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7402bd9da74fc0904ea02c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:vz5zD54cqlppCgbUY_CEREJikEY="
+  },
+  {
+    "id": "mhr-19",
+    "name": "「Thunder Speed」Thor",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7402c99da74fc0904ea02e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:CozKEY8b5hJxmuPKdfDVVAujNa4="
+  },
+  {
+    "id": "mhr-20",
+    "name": "「Thunder Charge」Thor",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7402d19da74fc0904ea030?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:9gbdTk1ENtPgTnpvwLYKFMmg1gI="
+  },
+  {
+    "id": "mhr-21",
+    "name": "「Stunner Blast」War Machine",
+    "level": 4,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7402d99da74fc0904ea032?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:M3ZtX3qP-i1cQvYcR7uD6v2sPcw="
+  },
+  {
+    "id": "mhr-22",
+    "name": "「Vortex Energy」Iron Man",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7402e19da74fc0904ea034?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:6kPZ4cZ8rK1bYnVxG9sQ9wQyO3Y="
+  },
+  {
+    "id": "mhr-23",
+    "name": "「Titan Crusher」Hulk",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7402ea9da74fc0904ea036?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:G1xN5cZ0pL7vYmQoE6tM2vQzM8Y="
+  },
+  {
+    "id": "mhr-24",
+    "name": "「Vibranium Strike」Black Panther",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7402f29da74fc0904ea038?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:A2kP6cZ5vM0vXvQzE5rL3sQyN9Y="
+  },
+  {
+    "id": "mhr-25",
+    "name": "「Phase Blast」Vision",
+    "level": 4,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7402fb9da74fc0904ea03a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:K4mQ7cZ6wN1wYwR0F6sM4tQzO0Z="
+  },
+  {
+    "id": "mhr-26",
+    "name": "「Shadow Strike」Black Widow",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403039da74fc0904ea03c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:L5nR8cZ7xO2xZxS1G7tN5uR0P1a="
+  },
+  {
+    "id": "mhr-27",
+    "name": "「Omega Protocol」Ultron",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74030c9da74fc0904ea03e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:M6oS9cZ8yP3yAyT2H8uO6vS1Q2b="
+  },
+  {
+    "id": "mhr-28",
+    "name": "「Heavy Artillery」War Machine",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403159da74fc0904ea040?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:N7pT0cZ9zQ4zBzU3I9vP7wT2R3c="
+  },
+  {
+    "id": "mhr-29",
+    "name": "「Arc Burst」Iron Man",
+    "level": 2,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74031e9da74fc0904ea042?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:O8qU1cZ0aR5aCaV4J0wQ8xU3S4d="
+  },
+  {
+    "id": "mhr-30",
+    "name": "「Thunder Crash」Thor",
+    "level": 4,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403279da74fc0904ea044?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:P9rV2cZ1bS6bDbW5K1xR9yV4T5e="
+  },
+  {
+    "id": "mhr-31",
+    "name": "「Rage Burst」Hulk",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403309da74fc0904ea046?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Q0sW3cZ2cT7cEcX6L2yS0zW5U6f="
+  },
+  {
+    "id": "mhr-32",
+    "name": "「Panther Slash」Black Panther",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403399da74fc0904ea048?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:R1tX4cZ3dU8dFdY7M3zT1aX6V7g="
+  },
+  {
+    "id": "mhr-33",
+    "name": "「Solar Laser」Vision",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403429da74fc0904ea04a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:S2uY5cZ4eV9eGeZ8N4aU2bY7W8h="
+  },
+  {
+    "id": "mhr-34",
+    "name": "「Widow Sting」Black Widow",
+    "level": 1,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74034b9da74fc0904ea04c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:T3vZ6cZ5fW0fHfa9O5bV3cZ8X9i="
+  },
+  {
+    "id": "mhr-35",
+    "name": "「Drone Swarm」Ultron",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403549da74fc0904ea04e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:U4wa7cZ6gX1gIgb0P6cW4d09Y0j="
+  },
+  {
+    "id": "mhr-36",
+    "name": "「Tactical Missile」War Machine",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74035d9da74fc0904ea050?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:V5xb8cZ7hY2hJhc1Q7dX5e1aZ1k="
+  },
+  {
+    "id": "mhr-37",
+    "name": "「Repulsor Charge」Iron Man",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403669da74fc0904ea052?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:W6yc9cZ8iZ3kKid2R8eY6f2bA2l="
+  },
+  {
+    "id": "mhr-38",
+    "name": "「God of Thunder」Thor",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74036f9da74fc0904ea054?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:X7zd0cZ9ja4lLje3S9fZ7g3cB3m="
+  },
+  {
+    "id": "mhr-39",
+    "name": "「Gamma Slam」Hulk",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403789da74fc0904ea056?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Y8ae1cZ0kb5mMkf4T0ga8h4dC4n="
+  },
+  {
+    "id": "mhr-40",
+    "name": "「Wakandan Guard」Black Panther",
+    "level": 1,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403819da74fc0904ea058?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Z9bf2cZ1lc6nNlg5U1hb9i5eD5o="
+  },
+  {
+    "id": "mhr-41",
+    "name": "「Mind Stone Surge」Vision",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74038a9da74fc0904ea05a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:A0cg3cZ2md7oOmh6V2ic0j6fE6p="
+  },
+  {
+    "id": "mhr-42",
+    "name": "「Infiltration」Black Widow",
+    "level": 2,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403939da74fc0904ea05c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:B1dh4cZ3ne8pPni7W3jd1k7gF7q="
+  },
+  {
+    "id": "mhr-43",
+    "name": "「Cybernetic Core」Ultron",
+    "level": 4,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74039c9da74fc0904ea05e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:C2ei5cZ4of9qQoj8X4ke2l8hG8r="
+  },
+  {
+    "id": "mhr-44",
+    "name": "「Buster Armor」War Machine",
+    "level": 5,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403a59da74fc0904ea060?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:D3fj6cZ5pg0rRpk9Y5lf3m9iH9s="
+  },
+  {
+    "id": "mhr-45",
+    "name": "「Overdrive」Iron Man",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403ae9da74fc0904ea062?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:E4gk7cZ6qh1sSql0Z6mg4n0jI0t="
+  },
+  {
+    "id": "mhr-46",
+    "name": "「Lightning Strike」Thor",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403b79da74fc0904ea064?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:F5hl8cZ7ri2tTrm1a7nh5o1kJ1u="
+  },
+  {
+    "id": "mhr-47",
+    "name": "「Unstoppable」Hulk",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403c09da74fc0904ea066?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:G6im9cZ8sj3uUsn2b8oi6p2lK2v="
+  },
+  {
+    "id": "mhr-48",
+    "name": "「Kinetic Armor」Black Panther",
+    "level": 4,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403c99da74fc0904ea068?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:H7jn0cZ9tk4vVto3c9pj7q3mL3w="
+  },
+  {
+    "id": "mhr-49",
+    "name": "「Density Shift」Vision",
+    "level": 2,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403d29da74fc0904ea06a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:I8ko1cZ0ul5wWup4d0qk8r4nM4x="
+  },
+  {
+    "id": "mhr-50",
+    "name": "「Acrobatic Strike」Black Widow",
+    "level": 4,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403db9da74fc0904ea06c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:J9lp2cZ1vm6xXvq5e1rl9s5oO5y="
+  },
+  {
+    "id": "mhr-51",
+    "name": "「Command Protocol」Ultron",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403e49da74fc0904ea06e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:K0mq3cZ2wn7yYwr6f2sm0t6pP6z="
+  },
+  {
+    "id": "mhr-52",
+    "name": "「Mini Gun Barrage」War Machine",
+    "level": 2,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403ed9da74fc0904ea070?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:L1nr4cZ3xo8zZxs7g3tn1u7qQ7A="
+  },
+  {
+    "id": "mhr-53",
+    "name": "「Quantum Blast」Iron Man",
+    "level": 5,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403f69da74fc0904ea072?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:M2os5cZ4yp9aAyt8h4uo2v8rR8B="
+  },
+  {
+    "id": "mhr-54",
+    "name": "「Thunder Hammer」Thor",
+    "level": 1,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7403ff9da74fc0904ea074?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:N3pt6cZ5zq0bBzu9i5vp3w9sS9C="
+  },
+  {
+    "id": "mhr-55",
+    "name": "「Smash Wave」Hulk",
+    "level": 4,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404089da74fc0904ea076?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:O4qu7cZ6ar1cCav0j6wq4x0tT0D="
+  },
+  {
+    "id": "mhr-56",
+    "name": "「Panther Pounce」Black Panther",
+    "level": 6,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404119da74fc0904ea078?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:P5rv8cZ7bs2dDbw1k7xr5y1uU1E="
+  },
+  {
+    "id": "mhr-57",
+    "name": "「Synthetic Strength」Vision",
+    "level": 3,
+    "color": "Red",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74041a9da74fc0904ea07a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Q6sw9cZ8ct3eEcx2l8ys6z2vV2F="
+  },
+  {
+    "id": "mhr-58",
+    "name": "「Assault Drill」War Machine",
+    "level": 3,
+    "color": "Red",
+    "set": "SD01",
+    "image": "https://marvel-tcg.janime.cn/6a7404239da74fc0904ea07c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:R7tx0cZ9du4fFdy3m9zt7a3wW3G="
+  },
+  {
+    "id": "mhr-59",
+    "name": "「Iron Legion」Iron Man",
+    "level": 4,
+    "color": "Red",
+    "set": "SD01",
+    "image": "https://marvel-tcg.janime.cn/6a74042c9da74fc0904ea07e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:S8uy1cZ0ev5gGez4n0au8b4xX4H="
+  },
+  {
+    "id": "mhr-60",
+    "name": "「Mystic Portal」Doctor Strange",
+    "level": 4,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404359da74fc0904ea080?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:T9vz2cZ1fw6hHf05o1bv9c5yY5I="
+  },
+  {
+    "id": "mhr-61",
+    "name": "「Astral Projection」Doctor Strange",
+    "level": 6,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74043e9da74fc0904ea082?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:U0wa3cZ2gx7iIg16p2cw0d6zZ6J="
+  },
+  {
+    "id": "mhr-62",
+    "name": "「Chaos Warp」Scarlet Witch",
+    "level": 6,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404479da74fc0904ea084?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:V1xb4cZ3hy8jJh27q3dx1e7aA7K="
+  },
+  {
+    "id": "mhr-63",
+    "name": "「Hex Blast」Scarlet Witch",
+    "level": 3,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404509da74fc0904ea086?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:W2yc5cZ4iz9kKi38r4ey2f8bB8L="
+  },
+  {
+    "id": "mhr-64",
+    "name": "「Cosmic Blast」Captain Marvel",
+    "level": 6,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404599da74fc0904ea088?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:X3zd6cZ5ja0lLj49s5fz3g9cC9M="
+  },
+  {
+    "id": "mhr-65",
+    "name": "「Photon Surge」Captain Marvel",
+    "level": 3,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404629da74fc0904ea08a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Y4ae7cZ6kb1mMk50t6ga4h0dD0N="
+  },
+  {
+    "id": "mhr-66",
+    "name": "「Mind Control」Loki",
+    "level": 3,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74046b9da74fc0904ea08c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Z5bf8cZ7lc2nNl61u7hb5i1eE1O="
+  },
+  {
+    "id": "mhr-67",
+    "name": "「Illusion Mirror」Loki",
+    "level": 6,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404749da74fc0904ea08e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:A6cg9cZ8md3oOm72v8ic6j2fF2P="
+  },
+  {
+    "id": "mhr-68",
+    "name": "「Telekinesis」Magneto",
+    "level": 6,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74047d9da74fc0904ea090?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:B7dh0cZ9ne4pPn83w9jd7k3gG3Q="
+  },
+  {
+    "id": "mhr-69",
+    "name": "「Magnetic Shield」Magneto",
+    "level": 2,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404869da74fc0904ea092?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:C8ei1cZ0of5qQo94x0ke8l4hH4R="
+  },
+  {
+    "id": "mhr-70",
+    "name": "「Frost Armor」Iceman",
+    "level": 2,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74048f9da74fc0904ea094?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:D9fj2cZ1pg6rRp05y1lf9m5iI5S="
+  },
+  {
+    "id": "mhr-71",
+    "name": "「Ice Slide」Iceman",
+    "level": 3,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404989da74fc0904ea096?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:E0gk3cZ2qh7sSq16z2mg0n6jJ6T="
+  },
+  {
+    "id": "mhr-72",
+    "name": "「Psionic Knife」Psylocke",
+    "level": 3,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404a19da74fc0904ea098?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:F1hl4cZ3ri8tTr27a3nh1o7kK7U="
+  },
+  {
+    "id": "mhr-73",
+    "name": "「Telepathic Wave」Jean Grey",
+    "level": 6,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404aa9da74fc0904ea09a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:G2im5cZ4sj9uUs38b4oi2p8lL8V="
+  },
+  {
+    "id": "mhr-74",
+    "name": "「Phoenix Force」Jean Grey",
+    "level": 6,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404b39da74fc0904ea09c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:H3jn6cZ5tk0vVt49c5pj3q9mM9W="
+  },
+  {
+    "id": "mhr-75",
+    "name": "「Time Loop」Doctor Strange",
+    "level": 1,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404bc9da74fc0904ea09e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:I4ko7cZ6ul1wWu50d6qk4r0nN0X="
+  },
+  {
+    "id": "mhr-76",
+    "name": "「Mirror Dimension」Doctor Strange",
+    "level": 3,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404c59da74fc0904ea0a0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:J5lp8cZ7vm2xXv61e7rl5s1oO1Y="
+  },
+  {
+    "id": "mhr-77",
+    "name": "「Reality Warp」Scarlet Witch",
+    "level": 5,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404ce9da74fc0904ea0a2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:K6mq9cZ8wn3yYw72f8sm6t2pP2Z="
+  },
+  {
+    "id": "mhr-78",
+    "name": "「Cosmic Beam」Captain Marvel",
+    "level": 4,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404d79da74fc0904ea0a4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:L7nr0cZ9xo4zZx83g9tn7u3qQ3a="
+  },
+  {
+    "id": "mhr-79",
+    "name": "「Trickster Dagger」Loki",
+    "level": 1,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404e09da74fc0904ea0a6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:M8os1cZ0yp5aAy94h0uo8v4rR4b="
+  },
+  {
+    "id": "mhr-80",
+    "name": "「EMP Burst」Magneto",
+    "level": 3,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404e99da74fc0904ea0a8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:N9pt2cZ1zq6bBz05i1vp9w5sS5c="
+  },
+  {
+    "id": "mhr-81",
+    "name": "「Blizzard」Iceman",
+    "level": 6,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404f29da74fc0904ea0aa?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:O0qu3cZ2ar7cCa16j2wq0x6tT6d="
+  },
+  {
+    "id": "mhr-82",
+    "name": "「Telepathic Shield」Jean Grey",
+    "level": 2,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7404fb9da74fc0904ea0ac?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:P1rv4cZ3bs8dDb27k3xr1y7uU7e="
+  },
+  {
+    "id": "mhr-83",
+    "name": "「Crimson Bands」Doctor Strange",
+    "level": 3,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405049da74fc0904ea0ae?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Q2sw5cZ4ct9eEc38l4ys2z8vV8f="
+  },
+  {
+    "id": "mhr-84",
+    "name": "「Probability Hex」Scarlet Witch",
+    "level": 1,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74050d9da74fc0904ea0b0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:R3tx6cZ5du0fFd49m5zt3a9wW9g="
+  },
+  {
+    "id": "mhr-85",
+    "name": "「Binary Star」Captain Marvel",
+    "level": 6,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405169da74fc0904ea0b2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:S4uy7cZ6ev1gGe50n6au4b0xX0h="
+  },
+  {
+    "id": "mhr-86",
+    "name": "「Doppelganger」Loki",
+    "level": 4,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74051f9da74fc0904ea0b4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:T5vz8cZ7fw2hHf61o7bv5c1yY1i="
+  },
+  {
+    "id": "mhr-87",
+    "name": "「Metal Storm」Magneto",
+    "level": 4,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405289da74fc0904ea0b6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:U6wa9cZ8gx3iIg72p8cw6d2zZ2j="
+  },
+  {
+    "id": "mhr-88",
+    "name": "「Glacier Wall」Iceman",
+    "level": 3,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405319da74fc0904ea0b8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:V7xb0cZ9hy4jJh83q9dx7e3aA3k="
+  },
+  {
+    "id": "mhr-89",
+    "name": "「Psychic Spear」Psylocke",
+    "level": 2,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74053a9da74fc0904ea0ba?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:W8yc1cZ0iz5kKi94r0ey8f4bB4l="
+  },
+  {
+    "id": "mhr-90",
+    "name": "「Mind Blast」Jean Grey",
+    "level": 3,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405439da74fc0904ea0bc?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:X9zd2cZ1ja6lLj05s1fz9g5cC5m="
+  },
+  {
+    "id": "mhr-91",
+    "name": "「Eye of Agamotto」Doctor Strange",
+    "level": 6,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74054c9da74fc0904ea0be?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Y0ae3cZ2kb7mMk16t2ga0h6dD6n="
+  },
+  {
+    "id": "mhr-92",
+    "name": "「Chaos Storm」Scarlet Witch",
+    "level": 6,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405559da74fc0904ea0c0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Z1bf4cZ3lc8nNl27u3hb1i7eE7o="
+  },
+  {
+    "id": "mhr-93",
+    "name": "「Energy Absorb」Captain Marvel",
+    "level": 1,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74055e9da74fc0904ea0c2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:A2cg5cZ4md9oOm38v4ic2j8fF8p="
+  },
+  {
+    "id": "mhr-94",
+    "name": "「Sorcerer's Cunning」Loki",
+    "level": 2,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405679da74fc0904ea0c4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:B3dh6cZ5ne0pPn49w5jd3k9gG9q="
+  },
+  {
+    "id": "mhr-95",
+    "name": "「Polar Shift」Magneto",
+    "level": 5,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405709da74fc0904ea0c6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:C4ei7cZ6of1qQo50x6ke4l0hH0r="
+  },
+  {
+    "id": "mhr-96",
+    "name": "「Subzero Burst」Iceman",
+    "level": 4,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405799da74fc0904ea0c8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:D5fj8cZ7pg2rRp61y7lf5m1iI1s="
+  },
+  {
+    "id": "mhr-97",
+    "name": "「Shadow Psionic」Psylocke",
+    "level": 4,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405829da74fc0904ea0ca?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:E6gk9cZ8qh3sSq72z8mg6n2jJ2t="
+  },
+  {
+    "id": "mhr-98",
+    "name": "「Phoenix Flight」Jean Grey",
+    "level": 5,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74058b9da74fc0904ea0cc?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:F7hl0cZ9ri4tTr83a9nh7o3kK3u="
+  },
+  {
+    "id": "mhr-99",
+    "name": "「Astral Shield」Doctor Strange",
+    "level": 2,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405949da74fc0904ea0ce?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:G8im1cZ0sj5uUs94b0oi8p4lL4v="
+  },
+  {
+    "id": "mhr-100",
+    "name": "「Hex Field」Scarlet Witch",
+    "level": 4,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74059d9da74fc0904ea0d0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:H9jn2cZ1tk6vVt05c1pj9q5mM5w="
+  },
+  {
+    "id": "mhr-101",
+    "name": "「Photon Blast」Captain Marvel",
+    "level": 3,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405a69da74fc0904ea0d2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:I0ko3cZ2ul7wWu16d2qk0r6nN6x="
+  },
+  {
+    "id": "mhr-102",
+    "name": "「Illusion Trap」Loki",
+    "level": 3,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405af9da74fc0904ea0d4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:J1lp4cZ3vm8xXv27e3rl1s7oO7y="
+  },
+  {
+    "id": "mhr-103",
+    "name": "「Magnetic Pull」Magneto",
+    "level": 1,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405b89da74fc0904ea0d6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:K2mq5cZ4wn9yYw38f4sm2t8pP8z="
+  },
+  {
+    "id": "mhr-104",
+    "name": "「Ice Spikes」Iceman",
+    "level": 1,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405c19da74fc0904ea0d8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:L3nr6cZ5xo0zZx49g5tn3u9qQ9A="
+  },
+  {
+    "id": "mhr-105",
+    "name": "「Psionic Katana」Psylocke",
+    "level": 1,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405ca9da74fc0904ea0da?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:M4os7cZ6yp1aAy50h6uo4v0rR0B="
+  },
+  {
+    "id": "mhr-106",
+    "name": "「Telepathic Flare」Jean Grey",
+    "level": 1,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405d39da74fc0904ea0dc?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:N5pt8cZ7zq2bBz61i7vp5w1sS1C="
+  },
+  {
+    "id": "mhr-107",
+    "name": "「Sanctum Defense」Doctor Strange",
+    "level": 5,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405dc9da74fc0904ea0de?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:O6qu9cZ8ar3cCa72j8wq6x2tT2D="
+  },
+  {
+    "id": "mhr-108",
+    "name": "「Chaos Surge」Scarlet Witch",
+    "level": 2,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405e59da74fc0904ea0e0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:P7rv0cZ9bs4dDb83k9xr7y3uU3E="
+  },
+  {
+    "id": "mhr-109",
+    "name": "「Higher Further Faster」Captain Marvel",
+    "level": 2,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405ee9da74fc0904ea0e2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Q8sw1cZ0ct5eEc94l0ys8z4vV4F="
+  },
+  {
+    "id": "mhr-110",
+    "name": "「Asgardian Trick」Loki",
+    "level": 5,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7405f79da74fc0904ea0e4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:R9tx2cZ1du6fFd05m1zt9a5wW5G="
+  },
+  {
+    "id": "mhr-111",
+    "name": "「Magnetic Field」Magneto",
+    "level": 3,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406009da74fc0904ea0e6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:S0uy3cZ2ev7gGe16n2au0b6xX6H="
+  },
+  {
+    "id": "mhr-112",
+    "name": "「Frost Barrier」Iceman",
+    "level": 5,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406099da74fc0904ea0e8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:T1vz4cZ3fw8hHf27o3bv1c7yY7I="
+  },
+  {
+    "id": "mhr-113",
+    "name": "「Psychic Focus」Psylocke",
+    "level": 6,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406129da74fc0904ea0ea?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:U2wa5cZ4gx9iIg38p4cw2d8zZ8J="
+  },
+  {
+    "id": "mhr-114",
+    "name": "「Cosmic Entity」Jean Grey",
+    "level": 4,
+    "color": "Blue",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74061b9da74fc0904ea0ec?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:V3xb6cZ5hy0jJh49q5dx3e9aA9K="
+  },
+  {
+    "id": "mhr-115",
+    "name": "「Mystic Ward」Doctor Strange",
+    "level": 3,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a7406249da74fc0904ea0ee?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:W4yc7cZ6iz1kKi50r6ey4f0bB0L="
+  },
+  {
+    "id": "mhr-116",
+    "name": "「Hex Energy」Scarlet Witch",
+    "level": 3,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a74062d9da74fc0904ea0f0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:X5zd8cZ7ja2lLj61s7fz5g1cC1M="
+  },
+  {
+    "id": "mhr-117",
+    "name": "「Star Force」Captain Marvel",
+    "level": 5,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a7406369da74fc0904ea0f2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Y6ae9cZ8kb3mMk72t8ga6h2dD2N="
+  },
+  {
+    "id": "mhr-118",
+    "name": "「Mischief」Loki",
+    "level": 3,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a74063f9da74fc0904ea0f4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Z7bf0cZ9lc4nNl83u9hb7i3eE3O="
+  },
+  {
+    "id": "mhr-119",
+    "name": "「Astral Plane」Doctor Strange",
+    "level": 6,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a7406489da74fc0904ea0f6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:A8cg1cZ0md5oOm94v0ic8j4fF4P="
+  },
+  {
+    "id": "mhr-120",
+    "name": "「Shield Throw」Captain America",
+    "level": 3,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406519da74fc0904ea0f8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:B9dh2cZ1ne6pPn05w1jd9k5gG5Q="
+  },
+  {
+    "id": "mhr-121",
+    "name": "「Sentinel of Liberty」Captain America",
+    "level": 6,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74065a9da74fc0904ea0fa?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:C0ei3cZ2of7qQo16x2ke0l6hH6R="
+  },
+  {
+    "id": "mhr-122",
+    "name": "「Gamma Power」She-Hulk",
+    "level": 6,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406639da74fc0904ea0fc?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:D1fj4cZ3pg8rRp27y3lf1m7iI7S="
+  },
+  {
+    "id": "mhr-123",
+    "name": "「Courtroom Slam」She-Hulk",
+    "level": 3,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74066c9da74fc0904ea0fe?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:E2gk5cZ4qh9sSq38z4mg2n8jJ8T="
+  },
+  {
+    "id": "mhr-124",
+    "name": "「Flora Colossus」Groot",
+    "level": 6,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406759da74fc0904ea100?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:F3hl6cZ5ri0tTr49a5nh3o9kK9U="
+  },
+  {
+    "id": "mhr-125",
+    "name": "「Branch Barrier」Groot",
+    "level": 2,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74067e9da74fc0904ea102?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:G4im7cZ6sj1uUs50b6oi4p0lL0V="
+  },
+  {
+    "id": "mhr-126",
+    "name": "「Pym Particle」Ant-Man",
+    "level": 1,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406879da74fc0904ea104?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:H5jn8cZ7tk2vVt61c7pj5q1mM1W="
+  },
+  {
+    "id": "mhr-127",
+    "name": "「Giant-Man Stomp」Ant-Man",
+    "level": 6,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406909da74fc0904ea106?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:I6ko9cZ8ul3wWu72d8qk6r2nN2X="
+  },
+  {
+    "id": "mhr-128",
+    "name": "「Bio-Sting」Wasp",
+    "level": 3,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406999da74fc0904ea108?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:J7lp0cZ9vm4xXv83e9rl7s3oO3Y="
+  },
+  {
+    "id": "mhr-129",
+    "name": "「Winged Assault」Wasp",
+    "level": 4,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406a29da74fc0904ea10a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:K8mq1cZ0wn5yYw94f0sm8t4pP4Z="
+  },
+  {
+    "id": "mhr-130",
+    "name": "「Claw Strike」Wolverine",
+    "level": 3,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406ab9da74fc0904ea10c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:L9nr2cZ1xo6zZx05g1tn9u5qQ5A="
+  },
+  {
+    "id": "mhr-131",
+    "name": "「Berserker Rage」Wolverine",
+    "level": 6,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406b49da74fc0904ea10e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:M0os3cZ2yp7aAy16h2uo0v6rR6B="
+  },
+  {
+    "id": "mhr-132",
+    "name": "「Healing Factor」Wolverine",
+    "level": 2,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406bd9da74fc0904ea110?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:N1pt4cZ3zq8bBz27i3vp1w7sS7C="
+  },
+  {
+    "id": "mhr-133",
+    "name": "「Vibranium Block」Captain America",
+    "level": 2,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406c69da74fc0904ea112?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:O2qu5cZ4ar9cCa38j4wq2x8tT8D="
+  },
+  {
+    "id": "mhr-134",
+    "name": "「Legal Defense」She-Hulk",
+    "level": 1,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406cf9da74fc0904ea114?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:P3rv6cZ5bs0dDb49k5xr3y9uU9E="
+  },
+  {
+    "id": "mhr-135",
+    "name": "「I Am Groot」Groot",
+    "level": 3,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406d89da74fc0904ea116?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Q4sw7cZ6ct1eEc50l6ys4z0vV0F="
+  },
+  {
+    "id": "mhr-136",
+    "name": "「Micro Strike」Ant-Man",
+    "level": 3,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406e19da74fc0904ea118?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:R5tx8cZ7du2fFd61m7zt5a1wW1G="
+  },
+  {
+    "id": "mhr-137",
+    "name": "「Shrink Ray」Wasp",
+    "level": 2,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406ea9da74fc0904ea11a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:S6uy9cZ8ev3gGe72n8au6b2xX2H="
+  },
+  {
+    "id": "mhr-138",
+    "name": "「Adamantium Claws」Wolverine",
+    "level": 4,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406f39da74fc0904ea11c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:T7vz0cZ9fw4hHf83o9bv7c3yY3I="
+  },
+  {
+    "id": "mhr-139",
+    "name": "「Rallying Cry」Captain America",
+    "level": 4,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7406fc9da74fc0904ea11e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:U8wa1cZ0gx5iIg94p0cw8d4zZ4J="
+  },
+  {
+    "id": "mhr-140",
+    "name": "「Heavyweight」She-Hulk",
+    "level": 5,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407059da74fc0904ea120?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:V9xb2cZ1hy6jJh05q1dx9e5aA5K="
+  },
+  {
+    "id": "mhr-141",
+    "name": "「Root Entangle」Groot",
+    "level": 4,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74070e9da74fc0904ea122?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:W0yc3cZ2iz7kKi16r2ey0f6bB6L="
+  },
+  {
+    "id": "mhr-142",
+    "name": "「Ant Swarm」Ant-Man",
+    "level": 2,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407179da74fc0904ea124?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:X1zd4cZ3ja8lLj27s3fz1g7cC7M="
+  },
+  {
+    "id": "mhr-143",
+    "name": "「Stinger Barrage」Wasp",
+    "level": 5,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407209da74fc0904ea126?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Y2ae5cZ4kb9mMk38t4ga2h8dD8N="
+  },
+  {
+    "id": "mhr-144",
+    "name": "「Savage Slash」Wolverine",
+    "level": 5,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407299da74fc0904ea128?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Z3bf6cZ5lc0nNl49u5hb3i9eE9O="
+  },
+  {
+    "id": "mhr-145",
+    "name": "「First Avenger」Captain America",
+    "level": 5,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407329da74fc0904ea12a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:A4cg7cZ6md1oOm50v6ic4j0fF0P="
+  },
+  {
+    "id": "mhr-146",
+    "name": "「Sensational Strike」She-Hulk",
+    "level": 4,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74073b9da74fc0904ea12c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:B5dh8cZ7ne2pPn61w7jd5k1gG1Q="
+  },
+  {
+    "id": "mhr-147",
+    "name": "「Sprout Shield」Groot",
+    "level": 1,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407449da74fc0904ea12e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:C6ei9cZ8of3qQo72x8ke6l2hH2R="
+  },
+  {
+    "id": "mhr-148",
+    "name": "「Growing Power」Ant-Man",
+    "level": 4,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74074d9da74fc0904ea130?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:D7fj0cZ9pg4rRp83y9lf7m3iI3S="
+  },
+  {
+    "id": "mhr-149",
+    "name": "「Hornet Sting」Wasp",
+    "level": 1,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407569da74fc0904ea132?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:E8gk1cZ0qh5sSq94z0mg8n4jJ4T="
+  },
+  {
+    "id": "mhr-150",
+    "name": "「Weapon X」Wolverine",
+    "level": 6,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74075f9da74fc0904ea134?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:F9hl2cZ1ri6tTr05a1nh9o5kK5U="
+  },
+  {
+    "id": "mhr-151",
+    "name": "「Tactical Command」Captain America",
+    "level": 1,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407689da74fc0904ea136?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:G0im3cZ2sj7uUs16b2oi0p6lL6V="
+  },
+  {
+    "id": "mhr-152",
+    "name": "「Single Female Lawyer」She-Hulk",
+    "level": 2,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407719da74fc0904ea138?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:H1jn4cZ3tk8vVt27c3pj1q7mM7W="
+  },
+  {
+    "id": "mhr-153",
+    "name": "「Guardian Tree」Groot",
+    "level": 5,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74077a9da74fc0904ea13a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:I2ko5cZ4ul9wWu38d4qk2r8nN8X="
+  },
+  {
+    "id": "mhr-154",
+    "name": "「Quantum Shift」Ant-Man",
+    "level": 5,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407839da74fc0904ea13c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:J3lp6cZ5vm0xXv49e5rl3s9oO9Y="
+  },
+  {
+    "id": "mhr-155",
+    "name": "「Bio-Energy Pulse」Wasp",
+    "level": 6,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74078c9da74fc0904ea13e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:K4mq7cZ6wn1yYw50f6sm4t0pP0Z="
+  },
+  {
+    "id": "mhr-156",
+    "name": "「Logan's Fury」Wolverine",
+    "level": 1,
+    "color": "Green",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407959da74fc0904ea140?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:L5nr8cZ7xo2zZx61g7tn5u1qQ1A="
+  },
+  {
+    "id": "mhr-157",
+    "name": "「Vibranium Guard」Captain America",
+    "level": 3,
+    "color": "Green",
+    "set": "SD03",
+    "image": "https://marvel-tcg.janime.cn/6a74079e9da74fc0904ea142?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:M6os9cZ8yp3aAy72h8uo6v2rR2B="
+  },
+  {
+    "id": "mhr-158",
+    "name": "「Smash Defense」She-Hulk",
+    "level": 3,
+    "color": "Green",
+    "set": "SD03",
+    "image": "https://marvel-tcg.janime.cn/6a7407a79da74fc0904ea144?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:N7pt0cZ9zq4bBz83i9vp7w3sS3C="
+  },
+  {
+    "id": "mhr-159",
+    "name": "「Branch Club」Groot",
+    "level": 3,
+    "color": "Green",
+    "set": "SD03",
+    "image": "https://marvel-tcg.janime.cn/6a7407b09da74fc0904ea146?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:O8qu1cZ0ar5cCa94j0wq8x4tT4D="
+  },
+  {
+    "id": "mhr-160",
+    "name": "「Particle Growth」Ant-Man",
+    "level": 6,
+    "color": "Green",
+    "set": "SD03",
+    "image": "https://marvel-tcg.janime.cn/6a7407b99da74fc0904ea148?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:P9rv2cZ1bs6dDb05k1xr9y5uU5E="
+  },
+  {
+    "id": "mhr-161",
+    "name": "「Avenger Leader」Captain America",
+    "level": 6,
+    "color": "Green",
+    "set": "SD03",
+    "image": "https://marvel-tcg.janime.cn/6a7407c29da74fc0904ea14a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Q0sw3cZ2ct7eEc16l2ys0z6vV6F="
+  },
+  {
+    "id": "mhr-162",
+    "name": "「Trick Arrow」Hawkeye",
+    "level": 3,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407cb9da74fc0904ea14c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:R1tx4cZ3du8fFd27m3zt1a7wW7G="
+  },
+  {
+    "id": "mhr-163",
+    "name": "「Marksman Precision」Hawkeye",
+    "level": 6,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407d49da74fc0904ea14e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:S2uy5cZ4ev9gGe38n4au2b8xX8H="
+  },
+  {
+    "id": "mhr-164",
+    "name": "「Web Shooter」Spider-Man",
+    "level": 1,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407dd9da74fc0904ea150?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:T3vz6cZ5fw0hHf49o5bv3c9yY9I="
+  },
+  {
+    "id": "mhr-165",
+    "name": "「Spider-Sense」Spider-Man",
+    "level": 3,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407e69da74fc0904ea152?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:U4wa7cZ6gx1iIg50p6cw4d0zZ0J="
+  },
+  {
+    "id": "mhr-166",
+    "name": "「Spectacular Web」Spider-Man",
+    "level": 6,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407ef9da74fc0904ea154?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:V5xb8cZ7hy2jJh61q7dx5e1aA1K="
+  },
+  {
+    "id": "mhr-167",
+    "name": "「Venom Strike」Miles Morales",
+    "level": 3,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7407f89da74fc0904ea156?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:W6yc9cZ8iz3kKi72r8ey6f2bB2L="
+  },
+  {
+    "id": "mhr-168",
+    "name": "「Camouflage」Miles Morales",
+    "level": 2,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408019da74fc0904ea158?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:X7zd0cZ9ja4lLj83s9fz7g3cC3M="
+  },
+  {
+    "id": "mhr-169",
+    "name": "「Mega Venom Blast」Miles Morales",
+    "level": 6,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74080a9da74fc0904ea15a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Y8ae1cZ0kb5mMk94t0ga8h4dD4N="
+  },
+  {
+    "id": "mhr-170",
+    "name": "「Merc with a Mouth」Deadpool",
+    "level": 3,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408139da74fc0904ea15c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Z9bf2cZ1lc6nNl05u1hb9i5eE5O="
+  },
+  {
+    "id": "mhr-171",
+    "name": "「Katana Wheel」Deadpool",
+    "level": 4,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74081c9da74fc0904ea15e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:A0cg3cZ2md7oOm16v2ic0j6fF6P="
+  },
+  {
+    "id": "mhr-172",
+    "name": "「Chimichanga Time」Deadpool",
+    "level": 6,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408259da74fc0904ea160?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:B1dh4cZ3ne8pPn27w3jd1k7gG7Q="
+  },
+  {
+    "id": "mhr-173",
+    "name": "「Explosive Arrow」Hawkeye",
+    "level": 4,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74082e9da74fc0904ea162?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:C2ei5cZ4of9qQo38x4ke2l8hH8R="
+  },
+  {
+    "id": "mhr-174",
+    "name": "「Acrobatic Dodge」Spider-Man",
+    "level": 2,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408379da74fc0904ea164?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:D3fj6cZ5pg0rRp49y5lf3m9iI9S="
+  },
+  {
+    "id": "mhr-175",
+    "name": "「Bio-Electric Shock」Miles Morales",
+    "level": 1,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408409da74fc0904ea166?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:E4gk7cZ6qh1sSq50z6mg4n0jJ0T="
+  },
+  {
+    "id": "mhr-176",
+    "name": "「Fourth Wall Break」Deadpool",
+    "level": 1,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408499da74fc0904ea168?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:F5hl8cZ7ri2tTr61a7nh5o1kK1U="
+  },
+  {
+    "id": "mhr-177",
+    "name": "「Electric Arrow」Hawkeye",
+    "level": 2,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408529da74fc0904ea16a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:G6im9cZ8sj3uUs72b8oi6p2lL2V="
+  },
+  {
+    "id": "mhr-178",
+    "name": "「Web Net」Spider-Man",
+    "level": 4,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74085b9da74fc0904ea16c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:H7jn0cZ9tk4vVt83c9pj7q3mM3W="
+  },
+  {
+    "id": "mhr-179",
+    "name": "「Invisibility Strike」Miles Morales",
+    "level": 4,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408649da74fc0904ea16e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:I8ko1cZ0ul5wWu94d0qk8r4nN4X="
+  },
+  {
+    "id": "mhr-180",
+    "name": "「Guns & Swords」Deadpool",
+    "level": 5,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74086d9da74fc0904ea170?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:J9lp2cZ1vm6xXv05e1rl9s5oO5Y="
+  },
+  {
+    "id": "mhr-181",
+    "name": "「Sonic Arrow」Hawkeye",
+    "level": 5,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408769da74fc0904ea172?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:K0mq3cZ2wn7yYw16f2sm0t6pP6Z="
+  },
+  {
+    "id": "mhr-182",
+    "name": "「Web Slinging」Spider-Man",
+    "level": 5,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74087f9da74fc0904ea174?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:L1nr4cZ3xo8zZx27g3tn1u7qQ7A="
+  },
+  {
+    "id": "mhr-183",
+    "name": "「Web Trap」Miles Morales",
+    "level": 5,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408889da74fc0904ea176?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:M2os5cZ4yp9aAy38h4uo2v8rR8B="
+  },
+  {
+    "id": "mhr-184",
+    "name": "「Maximum Effort」Deadpool",
+    "level": 2,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408919da74fc0904ea178?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:N3pt6cZ5zq0bBz49i5vp3w9sS9C="
+  },
+  {
+    "id": "mhr-185",
+    "name": "「Quick Draw」Hawkeye",
+    "level": 1,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a74089a9da74fc0904ea17a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:O4qu7cZ6ar1cCa50j6wq4x0tT0D="
+  },
+  {
+    "id": "mhr-186",
+    "name": "「Friendly Neighborhood」Spider-Man",
+    "level": 3,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408a39da74fc0904ea17c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:P5rv8cZ7bs2dDb61k7xr5y1uU1E="
+  },
+  {
+    "id": "mhr-187",
+    "name": "「Spider Shock」Miles Morales",
+    "level": 3,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408ac9da74fc0904ea17e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Q6sw9cZ8ct3eEc72l8ys6z2vV2F="
+  },
+  {
+    "id": "mhr-188",
+    "name": "「Taco Break」Deadpool",
+    "level": 3,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408b59da74fc0904ea180?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:R7tx0cZ9du4fFd83m9zt7a3wW3G="
+  },
+  {
+    "id": "mhr-189",
+    "name": "「Target Locked」Hawkeye",
+    "level": 6,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408be9da74fc0904ea182?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:S8uy1cZ0ev5gGe94n0au8b4xX4H="
+  },
+  {
+    "id": "mhr-190",
+    "name": "「Wall Crawler」Spider-Man",
+    "level": 2,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408c79da74fc0904ea184?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:T9vz2cZ1fw6hHf05o1bv9c5yY5I="
+  },
+  {
+    "id": "mhr-191",
+    "name": "「Electric Web」Miles Morales",
+    "level": 2,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408d09da74fc0904ea186?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:U0wa3cZ2gx7iIg16p2cw0d6zZ6J="
+  },
+  {
+    "id": "mhr-192",
+    "name": "「Grenade Toss」Deadpool",
+    "level": 4,
+    "color": "Yellow",
+    "set": "BP01",
+    "image": "https://marvel-tcg.janime.cn/6a7408d99da74fc0904ea188?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:V1xb4cZ3hy8jJh27q3dx1e7aA7K="
+  },
+  {
+    "id": "mhr-193",
+    "name": "「Precision Shot」Hawkeye",
+    "level": 3,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a7408e29da74fc0904ea18a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:W2yc5cZ4iz9kKi38r4ey2f8bB8L="
+  },
+  {
+    "id": "mhr-194",
+    "name": "「Hero's Leap」Spider-Man",
+    "level": 3,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a7408eb9da74fc0904ea18c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:X3zd6cZ5ja0lLj49s5fz3g9cC9M="
+  },
+  {
+    "id": "mhr-195",
+    "name": "「Venom Blast」Miles Morales",
+    "level": 4,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a7408f49da74fc0904ea18e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Y4ae7cZ6kb1mMk50t6ga4h0dD0N="
+  },
+  {
+    "id": "mhr-196",
+    "name": "「Regenerate」Deadpool",
+    "level": 3,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a7408fd9da74fc0904ea190?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Z5bf8cZ7lc2nNl61u7hb5i1eE1O="
+  },
+  {
+    "id": "mhr-197",
+    "name": "「Ultimate Spider」Spider-Man",
+    "level": 6,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a7409069da74fc0904ea192?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:A6cg9cZ8md3oOm72v8ic6j2fF2P="
+  },
+  {
+    "id": "mhr-198",
+    "name": "「Repulsor Core」Iron Man",
+    "level": 1,
+    "color": "Red",
+    "set": "SD01",
+    "image": "https://marvel-tcg.janime.cn/6a74090f9da74fc0904ea194?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:B7dh0cZ9ne4pPn83w9jd7k3gG3Q="
+  },
+  {
+    "id": "mhr-199",
+    "name": "「Thunder Surge」Thor",
+    "level": 5,
+    "color": "Red",
+    "set": "SD01",
+    "image": "https://marvel-tcg.janime.cn/6a7409189da74fc0904ea196?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:C8ei1cZ0of5qQo94x0ke8l4hH4R="
+  },
+  {
+    "id": "mhr-200",
+    "name": "「Hulk Rage」Hulk",
+    "level": 5,
+    "color": "Red",
+    "set": "SD01",
+    "image": "https://marvel-tcg.janime.cn/6a7409219da74fc0904ea198?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:D9fj2cZ1pg6rRp05y1lf9m5iI5S="
+  },
+  {
+    "id": "mhr-201",
+    "name": "「Panther Claws」Black Panther",
+    "level": 2,
+    "color": "Red",
+    "set": "SD01",
+    "image": "https://marvel-tcg.janime.cn/6a74092a9da74fc0904ea19a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:E0gk3cZ2qh7sSq16z2mg0n6jJ6T="
+  },
+  {
+    "id": "mhr-202",
+    "name": "「Solar Beam」Vision",
+    "level": 5,
+    "color": "Red",
+    "set": "SD01",
+    "image": "https://marvel-tcg.janime.cn/6a7409339da74fc0904ea19c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:F1hl4cZ3ri8tTr27a3nh1o7kK7U="
+  },
+  {
+    "id": "mhr-203",
+    "name": "「Black Widow Kick」Black Widow",
+    "level": 6,
+    "color": "Red",
+    "set": "SD01",
+    "image": "https://marvel-tcg.janime.cn/6a74093c9da74fc0904ea19e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:G2im5cZ4sj9uUs38b4oi2p8lL8V="
+  },
+  {
+    "id": "mhr-204",
+    "name": "「Prime Ultron」Ultron",
+    "level": 5,
+    "color": "Red",
+    "set": "SD01",
+    "image": "https://marvel-tcg.janime.cn/6a7409459da74fc0904ea1a0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:H3jn6cZ5tk0vVt49c5pj3q9mM9W="
+  },
+  {
+    "id": "mhr-205",
+    "name": "「Iron Force」Iron Man",
+    "level": 3,
+    "color": "Red",
+    "set": "SD01",
+    "image": "https://marvel-tcg.janime.cn/6a74094e9da74fc0904ea1a2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:I4ko7cZ6ul1wWu50d6qk4r0nN0X="
+  },
+  {
+    "id": "mhr-206",
+    "name": "「Thunder Shield」Thor",
+    "level": 2,
+    "color": "Red",
+    "set": "SD01",
+    "image": "https://marvel-tcg.janime.cn/6a7409579da74fc0904ea1a4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:J5lp8cZ7vm2xXv61e7rl5s1oO1Y="
+  },
+  {
+    "id": "mhr-207",
+    "name": "「Hulk Strike」Hulk",
+    "level": 1,
+    "color": "Red",
+    "set": "SD01",
+    "image": "https://marvel-tcg.janime.cn/6a7409609da74fc0904ea1a6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:K6mq9cZ8wn3yYw72f8sm6t2pP2Z="
+  },
+  {
+    "id": "mhr-208",
+    "name": "「Mystic Blast」Doctor Strange",
+    "level": 1,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a7409699da74fc0904ea1a8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:L7nr0cZ9xo4zZx83g9tn7u3qQ3a="
+  },
+  {
+    "id": "mhr-209",
+    "name": "「Chaos Shield」Scarlet Witch",
+    "level": 3,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a7409729da74fc0904ea1aa?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:M8os1cZ0yp5aAy94h0uo8v4rR4b="
+  },
+  {
+    "id": "mhr-210",
+    "name": "「Cosmic Power」Captain Marvel",
+    "level": 4,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a74097b9da74fc0904ea1ac?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:N9pt2cZ1zq6bBz05i1vp9w5sS5c="
+  },
+  {
+    "id": "mhr-211",
+    "name": "「Illusion Step」Loki",
+    "level": 2,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a7409849da74fc0904ea1ae?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:O0qu3cZ2ar7cCa16j2wq0x6tT6d="
+  },
+  {
+    "id": "mhr-212",
+    "name": "「Magnetic Blast」Magneto",
+    "level": 6,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a74098d9da74fc0904ea1b0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:P1rv4cZ3bs8dDb27k3xr1y7uU7e="
+  },
+  {
+    "id": "mhr-213",
+    "name": "「Frost Blast」Iceman",
+    "level": 3,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a7409969da74fc0904ea1b2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Q2sw5cZ4ct9eEc38l4ys2z8vV8f="
+  },
+  {
+    "id": "mhr-214",
+    "name": "「Psionic Wave」Psylocke",
+    "level": 5,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a74099f9da74fc0904ea1b4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:R3tx6cZ5du0fFd49m5zt3a9wW9g="
+  },
+  {
+    "id": "mhr-215",
+    "name": "「Phoenix Surge」Jean Grey",
+    "level": 3,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a7409a89da74fc0904ea1b6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:S4uy7cZ6ev1gGe50n6au4b0xX0h="
+  },
+  {
+    "id": "mhr-216",
+    "name": "「Sorcerer Supreme」Doctor Strange",
+    "level": 6,
+    "color": "Blue",
+    "set": "SD02",
+    "image": "https://marvel-tcg.janime.cn/6a7409b19da74fc0904ea1b8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:T5vz8cZ7fw2hHf61o7bv5c1yY1i="
+  },
+  {
+    "id": "mhr-217",
+    "name": "「Shield Slam」Captain America",
+    "level": 2,
+    "color": "Green",
+    "set": "SD03",
+    "image": "https://marvel-tcg.janime.cn/6a7409ba9da74fc0904ea1ba?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:U6wa9cZ8gx3iIg72p8cw6d2zZ2j="
+  },
+  {
+    "id": "mhr-218",
+    "name": "「Green Strength」She-Hulk",
+    "level": 1,
+    "color": "Green",
+    "set": "SD03",
+    "image": "https://marvel-tcg.janime.cn/6a7409c39da74fc0904ea1bc?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:V7xb0cZ9hy4jJh83q9dx7e3aA3k="
+  },
+  {
+    "id": "mhr-219",
+    "name": "「Root Shield」Groot",
+    "level": 4,
+    "color": "Green",
+    "set": "SD03",
+    "image": "https://marvel-tcg.janime.cn/6a7409cc9da74fc0904ea1be?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:W8yc1cZ0iz5kKi94r0ey8f4bB4l="
+  },
+  {
+    "id": "mhr-220",
+    "name": "「Micro Jump」Ant-Man",
+    "level": 3,
+    "color": "Green",
+    "set": "SD03",
+    "image": "https://marvel-tcg.janime.cn/6a7409d59da74fc0904ea1c0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:X9zd2cZ1ja6lLj05s1fz9g5cC5m="
+  },
+  {
+    "id": "mhr-221",
+    "name": "「Wasp Sting」Wasp",
+    "level": 3,
+    "color": "Green",
+    "set": "SD03",
+    "image": "https://marvel-tcg.janime.cn/6a7409de9da74fc0904ea1c2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Y0ae3cZ2kb7mMk16t2ga0h6dD6n="
+  },
+  {
+    "id": "mhr-222",
+    "name": "「Feral Strike」Wolverine",
+    "level": 4,
+    "color": "Green",
+    "set": "SD03",
+    "image": "https://marvel-tcg.janime.cn/6a7409e79da74fc0904ea1c4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Z1bf4cZ3lc8nNl27u3hb1i7eE7o="
+  },
+  {
+    "id": "mhr-223",
+    "name": "「Shield Defense」Captain America",
+    "level": 4,
+    "color": "Green",
+    "set": "SD03",
+    "image": "https://marvel-tcg.janime.cn/6a7409f09da74fc0904ea1c6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:A2cg5cZ4md9oOm38v4ic2j8fF8p="
+  },
+  {
+    "id": "mhr-224",
+    "name": "「She-Hulk Smash」She-Hulk",
+    "level": 5,
+    "color": "Green",
+    "set": "SD03",
+    "image": "https://marvel-tcg.janime.cn/6a7409f99da74fc0904ea1c8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:B3dh6cZ5ne0pPn49w5jd3k9gG9q="
+  },
+  {
+    "id": "mhr-225",
+    "name": "「Arrow Rain」Hawkeye",
+    "level": 2,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a740a029da74fc0904ea1ca?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:C4ei7cZ6of1qQo50x6ke4l0hH0r="
+  },
+  {
+    "id": "mhr-226",
+    "name": "「Spider Strike」Spider-Man",
+    "level": 4,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a740a0b9da74fc0904ea1cc?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:D5fj8cZ7pg2rRp61y7lf5m1iI1s="
+  },
+  {
+    "id": "mhr-227",
+    "name": "「Venom Surge」Miles Morales",
+    "level": 3,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a740a149da74fc0904ea1ce?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:E6gk9cZ8qh3sSq72z8mg6n2jJ2t="
+  },
+  {
+    "id": "mhr-228",
+    "name": "「Deadpool Slash」Deadpool",
+    "level": 2,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a740a1d9da74fc0904ea1d0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:F7hl0cZ9ri4tTr83a9nh7o3kK3u="
+  },
+  {
+    "id": "mhr-229",
+    "name": "「Bullseye」Hawkeye",
+    "level": 5,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a740a269da74fc0904ea1d2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:G8im1cZ0sj5uUs94b0oi8p4lL4v="
+  },
+  {
+    "id": "mhr-230",
+    "name": "「Web Swing」Spider-Man",
+    "level": 1,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a740a2f9da74fc0904ea1d4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:H9jn2cZ1tk6vVt05c1pj9q5mM5w="
+  },
+  {
+    "id": "mhr-231",
+    "name": "「Spider Agility」Miles Morales",
+    "level": 6,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a740a389da74fc0904ea1d6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:I0ko3cZ2ul7wWu16d2qk0r6nN6x="
+  },
+  {
+    "id": "mhr-232",
+    "name": "「Sword Master」Deadpool",
+    "level": 5,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a740a419da74fc0904ea1d8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:J1lp4cZ3vm8xXv27e3rl1s7oO7y="
+  },
+  {
+    "id": "mhr-233",
+    "name": "「Grand Slam」Spider-Man",
+    "level": 5,
+    "color": "Yellow",
+    "set": "SD04",
+    "image": "https://marvel-tcg.janime.cn/6a740a4a9da74fc0904ea1da?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:K2mq5cZ4wn9yYw38f4sm2t8pP8z="
+  }
+];
 
     const MAX_DECK_SIZE = 50;
     const MAX_COPIES_PER_CARD = 3;
@@ -244,7 +2111,7 @@
     };
 
     // ==========================================
-    // APPLICATION LOGIC & STATE
+    // 2. APPLICATION LOGIC & STATE
     // ==========================================
     const app = {
       deck: {},
@@ -255,49 +2122,8 @@
       cardSize: 'large',
       drawnHand: [],
       
-      async init() {
+      init() {
         this.setupEventListeners();
-        await this.autoReadLocalExcel();
-      },
-
-      // Automatically checks and reads companion Excel files in the same folder
-      async autoReadLocalExcel() {
-        const potentialFileNames = [
-          'marvel_hero_rush_cards.xlsx',
-          'marvel_hero_rush_cards (2) (1).xlsx',
-          'marvel_hero_rush_cards.csv',
-          'cards.xlsx',
-          'cards.csv'
-        ];
-
-        for (const filename of potentialFileNames) {
-          try {
-            const response = await fetch(filename);
-            if (response.ok) {
-              const buffer = await response.arrayBuffer();
-              const workbook = XLSX.read(new Uint8Array(buffer), { type: 'array' });
-              const sheetName = workbook.SheetNames[0];
-              const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-
-              if (rows && rows.length > 0) {
-                console.log(`Auto-loaded cards from local file: ${filename}`);
-                CARD_DATABASE = rows.map((row, idx) => ({
-                  id: `mhr-${idx + 1}`,
-                  name: String(row['Card Name'] || row.Name || `Card ${idx + 1}`).trim(),
-                  level: parseInt(row.Level || 1, 10),
-                  color: String(row.Colour || row.Color || 'Red').trim().charAt(0).toUpperCase() + String(row.Colour || row.Color || 'Red').trim().slice(1).toLowerCase(),
-                  set: String(row['Card Set'] || row.Set || 'BP01').trim(),
-                  image: String(row['Card Image'] || row.Image || '').trim()
-                }));
-                this.renderAll();
-                this.showToast(`Auto-loaded ${CARD_DATABASE.length} cards from ${filename}`);
-                return;
-              }
-            }
-          } catch (e) {
-            // If opened directly via file://, browser sandbox prevents fetch
-          }
-        }
         this.renderAll();
       },
 
@@ -633,7 +2459,7 @@
           container.innerHTML = `
             <div class="col-span-full py-20 text-center text-slate-500 flex flex-col items-center gap-2">
               <i data-lucide="inbox" class="w-10 h-10 stroke-1"></i>
-              <p class="text-sm">No cards loaded yet. Place your Excel file in the folder or click <strong>Upload Excel</strong>.</p>
+              <p class="text-sm">No cards match the active filters.</p>
             </div>`;
           return;
         }
