@@ -52,6 +52,10 @@
       <button onclick="app.importDeckCode()" class="flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
         <i data-lucide="upload" class="w-3.5 h-3.5"></i> Import
       </button>
+      <div class="h-4 w-px bg-slate-700 mx-1 hidden sm:block"></div>
+      <button onclick="app.exportDeckImage()" id="btn-export-image" class="flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 disabled:opacity-50 text-blue-300 border border-blue-500/40 transition font-medium shadow-sm">
+        <i data-lucide="image-down" class="w-4 h-4"></i> Export as Image
+      </button>
     </div>
   </header>
 
@@ -437,6 +441,208 @@
         reader.readAsArrayBuffer(file);
       },
 
+      roundRect(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+      },
+
+      async exportDeckImage() {
+        const list = this.getDeckCardList();
+        if (list.length === 0) return;
+
+        const btn = document.getElementById('btn-export-image');
+        const originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Rendering...';
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+
+        const COLOR_HEX = { Red: '#ef4444', Blue: '#3b82f6', Green: '#10b981', Yellow: '#fbbf24' };
+
+        try {
+          // Preload every card image with CORS enabled. If a specific image can't be
+          // loaded cross-origin (no CORS headers from the source CDN), fall back to a
+          // styled placeholder for just that card instead of failing the whole export.
+          const loaded = await Promise.all(list.map(card => new Promise((resolve) => {
+            if (!card.image) { resolve({ card, img: null }); return; }
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => resolve({ card, img });
+            img.onerror = () => resolve({ card, img: null });
+            img.src = card.image;
+          })));
+
+          const anyLoaded = loaded.some(l => l.img);
+
+          const scale = 2;
+          const cols = Math.max(3, Math.min(6, Math.ceil(Math.sqrt(loaded.length))));
+          const rows = Math.ceil(loaded.length / cols);
+
+          const cellW = 210;
+          const cellH = 300;
+          const imgH = 226;
+          const gap = 18;
+          const padding = 40;
+          const headerHeight = 96;
+          const footerHeight = 40;
+
+          const width = padding * 2 + cols * cellW + (cols - 1) * gap;
+          const height = headerHeight + rows * cellH + (rows - 1) * gap + footerHeight + padding;
+
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(width * scale);
+          canvas.height = Math.round(height * scale);
+          const ctx = canvas.getContext('2d');
+          ctx.scale(scale, scale);
+
+          const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+          bgGrad.addColorStop(0, '#0f172a');
+          bgGrad.addColorStop(1, '#020617');
+          ctx.fillStyle = bgGrad;
+          ctx.fillRect(0, 0, width, height);
+
+          const total = this.getTotalCards();
+          const stats = this.getStats();
+          const activeColors = this.getActiveColors();
+
+          ctx.fillStyle = '#f8fafc';
+          ctx.font = '900 24px sans-serif';
+          ctx.fillText('MARVEL HERO RUSH — DECK', padding, 38);
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '600 13px sans-serif';
+          ctx.fillText(`${total}/${MAX_DECK_SIZE} Cards  •  Avg Level ${stats.avgLevel}  •  ${activeColors.join(' + ') || 'No colors'}`, padding, 62);
+
+          loaded.forEach(({ card, img }, i) => {
+            const col = i % cols;
+            const row = Math.floor(i / cols);
+            const x = padding + col * (cellW + gap);
+            const y = headerHeight + row * (cellH + gap);
+            const theme = COLOR_HEX[card.color] || '#ef4444';
+
+            ctx.fillStyle = '#0f172a';
+            this.roundRect(ctx, x, y, cellW, cellH, 14);
+            ctx.fill();
+            ctx.strokeStyle = theme;
+            ctx.lineWidth = 2;
+            this.roundRect(ctx, x, y, cellW, cellH, 14);
+            ctx.stroke();
+
+            const artX = x + 8, artY = y + 8, artW = cellW - 16, artH = imgH - 16;
+            ctx.save();
+            this.roundRect(ctx, artX, artY, artW, artH, 10);
+            ctx.clip();
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(artX, artY, artW, artH);
+            if (img) {
+              const ir = img.naturalWidth / img.naturalHeight;
+              const cr = artW / artH;
+              let dw, dh;
+              if (ir > cr) { dw = artW; dh = artW / ir; } else { dh = artH; dw = artH * ir; }
+              const dx = artX + (artW - dw) / 2;
+              const dy = artY + (artH - dh) / 2;
+              ctx.drawImage(img, dx, dy, dw, dh);
+            } else {
+              ctx.fillStyle = theme;
+              ctx.globalAlpha = 0.12;
+              ctx.fillRect(artX, artY, artW, artH);
+              ctx.globalAlpha = 1;
+              ctx.fillStyle = '#475569';
+              ctx.font = '600 12px sans-serif';
+              ctx.textAlign = 'center';
+              ctx.fillText('Art unavailable', artX + artW / 2, artY + artH / 2);
+              ctx.textAlign = 'left';
+            }
+            ctx.restore();
+
+            // Level badge (top-left over art)
+            ctx.fillStyle = 'rgba(2,6,23,0.85)';
+            this.roundRect(ctx, artX + 6, artY + 6, 46, 22, 6);
+            ctx.fill();
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = '800 12px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Lv.${card.level}`, artX + 6 + 23, artY + 6 + 15);
+
+            // Quantity badge (top-right over art) — the "number added" label
+            const qtyCx = artX + artW - 20, qtyCy = artY + 20;
+            ctx.beginPath();
+            ctx.arc(qtyCx, qtyCy, 17, 0, Math.PI * 2);
+            ctx.fillStyle = '#f59e0b';
+            ctx.fill();
+            ctx.strokeStyle = '#78350f';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.fillStyle = '#1e1b0e';
+            ctx.font = '900 15px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`x${card.qty}`, qtyCx, qtyCy + 5);
+            ctx.textAlign = 'left';
+
+            // Color dot (bottom-left over art)
+            ctx.beginPath();
+            ctx.arc(artX + 14, artY + artH - 14, 6, 0, Math.PI * 2);
+            ctx.fillStyle = theme;
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(2,6,23,0.85)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Name + color/set below art
+            ctx.fillStyle = '#e2e8f0';
+            ctx.font = '700 12px sans-serif';
+            ctx.textAlign = 'center';
+            let name = card.name;
+            const maxNameWidth = cellW - 16;
+            while (ctx.measureText(name).width > maxNameWidth && name.length > 3) name = name.slice(0, -1);
+            if (name !== card.name) name = name.trim() + '…';
+            ctx.fillText(name, x + cellW / 2, y + imgH + 20);
+
+            ctx.fillStyle = '#64748b';
+            ctx.font = '600 10px monospace';
+            ctx.fillText(`${card.color} • ${card.set}`, x + cellW / 2, y + imgH + 36);
+            ctx.textAlign = 'left';
+          });
+
+          ctx.fillStyle = '#475569';
+          ctx.font = '500 11px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(`Generated ${new Date().toLocaleDateString()} • Marvel Hero Rush Deck Builder`, width / 2, height - 16);
+          ctx.textAlign = 'left';
+
+          await new Promise((resolve) => {
+            canvas.toBlob((blob) => {
+              if (!blob) {
+                this.showToast('Export failed — please try again');
+                resolve();
+                return;
+              }
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.download = `marvel-hero-rush-deck-${Date.now()}.png`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+              this.showToast(anyLoaded ? 'Deck image downloaded!' : 'Downloaded — card art was blocked by the source, showing placeholders');
+              resolve();
+            }, 'image/png');
+          });
+        } catch (err) {
+          console.error(err);
+          this.showToast('Export failed — please try again');
+        } finally {
+          btn.disabled = this.getTotalCards() === 0;
+          btn.innerHTML = originalHtml;
+          if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+        }
+      },
+
+
       drawSampleHand() {
         const flattenedDeck = [];
         Object.entries(this.deck).forEach(([id, qty]) => {
@@ -659,6 +865,7 @@
         document.getElementById('btn-clear').disabled = total === 0;
         document.getElementById('btn-test-hand').disabled = total < 5;
         document.getElementById('btn-export').disabled = total === 0;
+        document.getElementById('btn-export-image').disabled = total === 0;
 
         const progress = document.getElementById('deck-progress');
         progress.style.width = `${(total / MAX_DECK_SIZE) * 100}%`;
