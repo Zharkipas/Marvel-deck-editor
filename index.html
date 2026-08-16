@@ -6,9 +6,16 @@
   <!-- Required to load cross-origin CDN images without being blocked by referrer protection -->
   <meta name="referrer" content="no-referrer" />
   <title>Marvel Hero Rush - Deck Builder</title>
+  
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- SheetJS for optional extra Excel (.xlsx / .csv) importing -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
   <style>
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #020617; }
@@ -17,6 +24,8 @@
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans flex flex-col min-h-screen">
+
+  <!-- Top Navbar -->
   <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur px-6 py-4 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-20">
     <div class="flex items-center gap-3">
       <div class="p-2.5 rounded-xl bg-gradient-to-br from-red-500 via-amber-400 to-blue-500 text-white border border-slate-700 shadow-md">
@@ -29,6 +38,8 @@
         <p class="text-xs text-slate-400">Levels 1–6 • Max 3 Copies/Card • 233 Cards Built-in</p>
       </div>
     </div>
+
+    <!-- Actions & Import -->
     <div class="flex items-center gap-2 flex-wrap">
       <label class="flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 transition cursor-pointer font-medium shadow-sm">
         <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> Upload Excel
@@ -44,11 +55,15 @@
     </div>
   </header>
 
+  <!-- Notification Toast -->
   <div id="toast" class="fixed bottom-6 right-6 z-50 bg-emerald-600 text-white text-xs px-4 py-2.5 rounded-lg shadow-lg flex items-center gap-2 transition-all duration-300 translate-y-20 opacity-0 hidden">
     <i data-lucide="check-circle" class="w-4 h-4"></i> <span id="toast-text">Deck code copied to clipboard!</span>
   </div>
 
+  <!-- Main Layout -->
   <main class="flex-1 p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto w-full">
+    
+    <!-- Left: Card Browser -->
     <section class="lg:col-span-7 flex flex-col gap-4">
       <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col gap-3 shadow-sm">
         <div class="flex items-center gap-3">
@@ -56,6 +71,8 @@
             <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
             <input type="text" id="search-input" placeholder="Search 233 card names..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-slate-500" />
           </div>
+
+          <!-- Card Size Buttons -->
           <div class="flex items-center gap-1 bg-slate-950 border border-slate-800 p-1 rounded-lg shrink-0">
             <span class="text-[11px] text-slate-400 px-1 font-semibold flex items-center gap-1">
               <i data-lucide="zoom-in" class="w-3.5 h-3.5 text-amber-400"></i> Size:
@@ -66,6 +83,7 @@
           </div>
         </div>
 
+        <!-- Color, Level & Card Set Filters -->
         <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-800/80">
           <div class="flex items-center gap-1.5" id="color-filters"></div>
           <div class="flex items-center gap-1.5" id="level-filters">
@@ -77,6 +95,7 @@
         </div>
       </div>
 
+      <!-- Color Lock Banner Warning -->
       <div id="color-lock-alert" class="hidden bg-slate-900/90 border border-amber-500/30 rounded-xl p-3 px-4 flex items-center justify-between text-xs text-slate-300 shadow-sm">
         <div class="flex items-center gap-2">
           <i data-lucide="lock" class="w-4 h-4 text-amber-400"></i>
@@ -85,11 +104,13 @@
         <div id="locked-color-tags" class="flex items-center gap-1.5 font-bold"></div>
       </div>
 
+      <!-- Dynamic Card Catalog Grid -->
       <div id="catalog-grid" class="grid gap-4 overflow-y-auto max-h-[820px] pr-1.5 pb-6"></div>
     </section>
 
+    <!-- Right: Active Deck & Curve Analysis -->
     <section class="lg:col-span-5 flex flex-col gap-4">
-      <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col gap-4 shadow-sm">
+      <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col gap-3 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
             <h2 class="text-base font-bold text-white flex items-center gap-2">
@@ -97,6 +118,7 @@
             </h2>
             <p class="text-xs text-slate-400" id="deck-stats-text"></p>
           </div>
+
           <div class="flex items-center gap-1.5">
             <button onclick="app.clearDeck()" id="btn-clear" class="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-950/30 rounded-lg border border-transparent hover:border-rose-900 transition disabled:opacity-40" title="Clear Deck">
               <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -111,6 +133,7 @@
           <div id="deck-progress" class="h-full bg-amber-500 transition-all duration-300" style="width: 0%"></div>
         </div>
 
+        <!-- Level Curve -->
         <div class="border-t border-slate-800 pt-3">
           <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">
             <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-blue-400"></i> Level Curve (Lv. 1 - 6)
@@ -118,6 +141,7 @@
           <div id="level-curve-chart" class="flex items-end justify-between gap-2 h-20 pt-2 px-1"></div>
         </div>
 
+        <!-- Active Colors Breakdown -->
         <div class="border-t border-slate-800 pt-3">
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
@@ -131,10 +155,12 @@
         </div>
       </div>
 
+      <!-- Deck List -->
       <div id="deck-list" class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex-1 flex flex-col gap-2 max-h-[500px] overflow-y-auto"></div>
     </section>
   </main>
 
+  <!-- Fullscreen Single Card Lightbox Modal -->
   <div id="art-zoom-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200" onclick="app.closeArtZoom()">
     <div class="relative max-w-lg w-full flex flex-col items-center gap-3 p-4 bg-slate-900/90 border border-slate-800 rounded-2xl shadow-2xl" onclick="event.stopPropagation()">
       <div class="w-full flex items-center justify-between border-b border-slate-800 pb-2">
@@ -150,6 +176,7 @@
     </div>
   </div>
 
+  <!-- Opening Hand Modal -->
   <div id="modal-overlay" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-5xl rounded-2xl p-6 shadow-2xl flex flex-col gap-6 transform scale-95 transition-transform max-h-[90vh] overflow-y-auto" id="modal-content">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -176,6 +203,55 @@
   </div>
 
   <script>
+    // ==========================================
+    // 1. ALL 233 CARDS COMPACT EMBEDDED DATASET
+    // ==========================================
+    const RAW_COMPACT_CARDS = [["mhr-1","「Antimatter」Iron Man",6,"Red","BP01","https://marvel-tcg.janime.cn/6a74579b9da74fc0904ea27c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:-HY5aEIYHdHtQabc0oRibSy93hw="],["mhr-2","「Antimatter」Iron Man",6,"Red","BP01","https://marvel-tcg.janime.cn/6a73ff299da74fc0904e9ff6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:fAtSyQ1jiemVByH-27VdeoV75GI="],["mhr-3","「Antimatter」Iron Man",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7455819da74fc0904ea26b?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:7OHhus4ipcY1IlClqcz6axEUtrw="],["mhr-4","「Covert Ops」Black Widow",3,"Red","BP01","https://marvel-tcg.janime.cn/6a74579e9da74fc0904ea27e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:aNTUJ6NS9mW-asnp2BC9bABD2I8="],["mhr-5","「Covert Ops」Black Widow",3,"Red","BP01","https://marvel-tcg.janime.cn/6a73ff419da74fc0904e9ff8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:yA2_lyNqld7OOlzdwuwZhZZX2Js="],["mhr-6","「Thunder Ally」Thor",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7457a29da74fc0904ea280?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:3sLtAqIbACJ_kMCU2cCoxzmPb3I="],["mhr-7","「Thunder Ally」Thor",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7455879da74fc0904ea26d?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Yh9QlN9jm7HbS_1SPnzmENx7BVc="],["mhr-8","「Thunder Ally」Thor",6,"Red","BP01","https://marvel-tcg.janime.cn/6a73ff4d9da74fc0904e9ffa?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:FnBHmUcM75MAFe6csVAyvQ-fuvs="],["mhr-9","「Never Back Down」Hulk",2,"Red","BP01","https://marvel-tcg.janime.cn/6a7409bd9da74fc0904ea188?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Mmc0_7X3AQYJ4Kjz-OboT2HpoCI="],["mhr-10","「Never Back Down」Hulk",2,"Red","BP01","https://marvel-tcg.janime.cn/6a7457a59da74fc0904ea282?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:1Lb3_bO98VkvdaTWrEyIqRI9aGE="],["mhr-11","「Red Room Experiment Subject」Black Widow",3,"Red","BP01","https://marvel-tcg.janime.cn/6a7409c59da74fc0904ea18a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:4118fPoGCqT-xZRqgpx3_2XjuJw="],["mhr-12","「Silent Hunter」Black Panther",5,"Red","BP01","https://marvel-tcg.janime.cn/6a7457aa9da74fc0904ea284?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:52-fQZJ8oBpYfZuJqmsR-teaxW4="],["mhr-13","「Silent Hunter」Black Panther",5,"Red","BP01","https://marvel-tcg.janime.cn/6a7409cc9da74fc0904ea18c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:dHOsg6_TJDPqGGsL4y3rbo3jL4M="],["mhr-14","「Void Reforge」Vision",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7457ad9da74fc0904ea286?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:XnzfGf_Equnqtoc1uYhiIfwDqXM="],["mhr-15","「Void Reforge」Vision",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7409d79da74fc0904ea18e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:x-OG6N9hGGwqT9E5y6dTBPmpmVc="],["mhr-16","「Pulse Uninstall」War Machine",1,"Red","BP01","https://marvel-tcg.janime.cn/6a7409e79da74fc0904ea190?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:VyhESCtgyGGw3XEzcrW_kLlaI58="],["mhr-17","「Pulse Assembler」Iron Man",3,"Red","BP01","https://marvel-tcg.janime.cn/6a7409ec9da74fc0904ea192?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:euTHh6kxM-PzmPj1s0yDbb3gOkY="],["mhr-18","「Evolution Protocol」Ultron",1,"Red","BP01","https://marvel-tcg.janime.cn/6a7402bd9da74fc0904ea02c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:vz5zD54cqlppCgbUY_CEREJikEY="],["mhr-19","「Thunder Speed」Thor",3,"Red","BP01","https://marvel-tcg.janime.cn/6a7402c99da74fc0904ea02e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:CozKEY8b5hJxmuPKdfDVVAujNa4="],["mhr-20","「Thunder Charge」Thor",3,"Red","BP01","https://marvel-tcg.janime.cn/6a7402d19da74fc0904ea030?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:9gbdTk1ENtPgTnpvwLYKFMmg1gI="],["mhr-21","「Wakanda Forever」Black Panther",5,"Red","BP01","https://marvel-tcg.janime.cn/6a7402d99da74fc0904ea032?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:VYbCKyGnDsVuUyDxFFwaYRLk1Fo="],["mhr-22","「Defense Program」Ultron",5,"Red","BP01","https://marvel-tcg.janime.cn/6a7402df9da74fc0904ea034?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:mU0SG20lkP5EgK3vfuD9y0wHzd8="],["mhr-23","「Disintegration Ray」Vision",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7402ec9da74fc0904ea036?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:PR2KAndvA1WC-dhOn4uzo1WrLlg="],["mhr-24","「Dimension Piercer」Iron Man",3,"Red","BP01","https://marvel-tcg.janime.cn/6a7402f19da74fc0904ea038?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:ttr5N4TGddNSULsboPoF3xwGFP0="],["mhr-25","「Avenge Wrath」Hulk",4,"Red","BP01","https://marvel-tcg.janime.cn/6a7402f89da74fc0904ea03a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:PHxQvQPWyfRDuFqYFFeGXrScNZc="],["mhr-26","「Furious Stomp」Hulk",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7402fe9da74fc0904ea03c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qK8B1w2795xR9e9w3hC77v3Wz-Y="],["mhr-27","「Tactical Decoy」Black Widow",1,"Red","BP01","https://marvel-tcg.janime.cn/6a7403069da74fc0904ea03e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Hk4mZz5rZ264j66aN46wG3l_4A0="],["mhr-28","「Nano Blast」Iron Man",4,"Red","BP01","https://marvel-tcg.janime.cn/6a74030f9da74fc0904ea040?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:lqR9Yd85g9q06L6m7u0G297fGkI="],["mhr-29","「Battlefield Control」War Machine",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7403159da74fc0904ea042?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:3l-HqK4qR28g544hB71g1n8W5Y4="],["mhr-30","「Energy Absorption」Vision",3,"Red","BP01","https://marvel-tcg.janime.cn/6a74031b9da74fc0904ea044?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:H22e666aXv9A9q2bV9bC897h9E8="],["mhr-31","「Asgardian Roar」Thor",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7403219da74fc0904ea046?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:hQ5Wl2l713jA498cZ0qF96wZ0B8="],["mhr-32","「Heart-Shaped Herb」Black Panther",3,"Red","BP01","https://marvel-tcg.janime.cn/6a7403279da74fc0904ea048?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:u4cT0gC87mK3vF1m4l1A5y1c1G4="],["mhr-33","「Thunder Core」Thor",1,"Red","BP01","https://marvel-tcg.janime.cn/6a7402bd9da74fc0904ea02a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:L9kO4w2714cZ2c1qC40c666f7A8="],["mhr-34","「Gamma Shock」Hulk",3,"Red","BP01","https://marvel-tcg.janime.cn/6a7457b09da74fc0904ea288?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o0aW5g70c67R9mK9_f3l154t4E4="],["mhr-35","「Vibranium Pulse」Black Panther",4,"Red","BP01","https://marvel-tcg.janime.cn/6a7457b49da74fc0904ea28a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qA2o2yK6vH5T6e1dG68h7u0nB0Y="],["mhr-36","「Phase Shift」Vision",3,"Red","BP01","https://marvel-tcg.janime.cn/6a7457b89da74fc0904ea28c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:xT1A44c9354jN48wN8wW8m9zP3A="],["mhr-37","「Heavy Arsenal」War Machine",3,"Red","BP01","https://marvel-tcg.janime.cn/6a7457bd9da74fc0904ea28e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:c3dC398fZ18C14cW012nB8wB6yY="],["mhr-38","「Unleashed Force」Hulk",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7457c19da74fc0904ea290?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:2mR1zK6u347W5y2iR9vY3w8nO5U="],["mhr-39","「Tactical Precision」Black Widow",2,"Red","BP01","https://marvel-tcg.janime.cn/6a7457c69da74fc0904ea292?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:20rB1kG5615R6aK0v3wZ677f4G4="],["mhr-40","「Cybernetic Overload」Ultron",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7457ca9da74fc0904ea294?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:t4hE7sS3k9qA511hD55cA86i9C0="],["mhr-41","「Armor Plating」Iron Man",2,"Red","BP01","https://marvel-tcg.janime.cn/6a7457ce9da74fc0904ea296?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:46dZ5sS564cZ2c1qC40c666f7A8="],["mhr-42","「Wakandan King」Black Panther",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7457d39da74fc0904ea298?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o7wX7z88yP7k733gY80j444oP9k="],["mhr-43","「Avenger Assemble」Thor",5,"Red","BP01","https://marvel-tcg.janime.cn/6a7457d79da74fc0904ea29a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:z5yZ0s88zP7k733gY80j444oP9k="],["mhr-44","「Incredible Fury」Hulk",5,"Red","BP01","https://marvel-tcg.janime.cn/6a7457db9da74fc0904ea29c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:p0eW8kK5437B755kP84g600aL2E="],["mhr-45","「Stark Technology」Iron Man",3,"Red","BP01","https://marvel-tcg.janime.cn/6a7457df9da74fc0904ea29e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:xQ8F0y31m11qG17dY33aN75y8Y0="],["mhr-46","「Widow Bite」Black Widow",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7457e39da74fc0904ea2a0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:5cE5yY99aQ5jK52kH68wA92q0B0="],["mhr-47","「Ultron Prime」Ultron",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7457e89da74fc0904ea2a2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:q7vW9s88zP7k733gY80j444oP9k="],["mhr-48","「Synthezoid」Vision",5,"Red","BP01","https://marvel-tcg.janime.cn/6a7457ed9da74fc0904ea2a4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:k7bW0y65bN0nC11fC89fP87z0A4="],["mhr-49","「Air Support」War Machine",5,"Red","BP01","https://marvel-tcg.janime.cn/6a7457f19da74fc0904ea2a6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:lA4G2z20m11qG17dY33aN75y8Y0="],["mhr-50","「Iron Vanguard」Iron Man",1,"Red","BP01","https://marvel-tcg.janime.cn/6a7457f59da74fc0904ea2a8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:yO9Q3s88zP7k733gY80j444oP9k="],["mhr-51","「Raging Behemoth」Hulk",3,"Red","BP01","https://marvel-tcg.janime.cn/6a7457f99da74fc0904ea2aa?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:xQ2W7s88zP7k733gY80j444oP9k="],["mhr-52","「Espionage Master」Black Widow",5,"Red","BP01","https://marvel-tcg.janime.cn/6a7457fe9da74fc0904ea2ac?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:rK1mY8y5jK7bC29mD49fK77z0B4="],["mhr-53","「God of Thunder」Thor",6,"Red","BP01","https://marvel-tcg.janime.cn/6a7458029da74fc0904ea2ae?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qK5jK7y5jK7bC29mD49fK77z0B4="],["mhr-54","「Wakanda Defender」Black Panther",3,"Red","SD01","https://marvel-tcg.janime.cn/6a7458079da74fc0904ea2b0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:77fZ6k44fT8kK52kH68wA92q0B0="],["mhr-55","「Stark Armor」Iron Man",4,"Red","SD01","https://marvel-tcg.janime.cn/6a74580b9da74fc0904ea2b2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:aP9K3s88zP7k733gY80j444oP9k="],["mhr-56","「Asgardian Thunder」Thor",3,"Red","SD01","https://marvel-tcg.janime.cn/6a7458109da74fc0904ea2b4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:s7mY0s88zP7k733gY80j444oP9k="],["mhr-57","「Gamma Smash」Hulk",4,"Red","SD01","https://marvel-tcg.janime.cn/6a7458149da74fc0904ea2b6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qP8Z5s88zP7k733gY80j444oP9k="],["mhr-58","「Silent Shadow」Black Widow",3,"Red","SD01","https://marvel-tcg.janime.cn/6a7458199da74fc0904ea2b8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:rK9Y0s88zP7k733gY80j444oP9k="],["mhr-59","「Supreme Intelligence」Ultron",6,"Red","SD01","https://marvel-tcg.janime.cn/6a74581d9da74fc0904ea2ba?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o8bW0s88zP7k733gY80j444oP9k="],["mhr-60","「Eye of Agamotto」Doctor Strange",6,"Blue","BP01","https://marvel-tcg.janime.cn/6a7409e29da74fc0904ea194?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Z0tP5y1dF78jN48wN8wW8m9zP3A="],["mhr-61","「Astral Traveler」Doctor Strange",4,"Blue","BP01","https://marvel-tcg.janime.cn/6a7409e79da74fc0904ea196?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:0qY4gC63j11qG17dY33aN75y8Y0="],["mhr-62","「Chaos Magic」Scarlet Witch",6,"Blue","BP01","https://marvel-tcg.janime.cn/6a7409ec9da74fc0904ea198?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:3cZ2k77jK52kH68wA92q0B0="],["mhr-63","「Hex Caster」Scarlet Witch",3,"Blue","BP01","https://marvel-tcg.janime.cn/6a7409f19da74fc0904ea19a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:20qB1kG5615R6aK0v3wZ677f4G4="],["mhr-64","「Binary Blast」Captain Marvel",6,"Blue","BP01","https://marvel-tcg.janime.cn/6a7409f69da74fc0904ea19c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:5cE5yY99aQ5jK52kH68wA92q0B0="],["mhr-65","「Cosmic Flight」Captain Marvel",3,"Blue","BP01","https://marvel-tcg.janime.cn/6a7409fb9da74fc0904ea19e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qA2o2yK6vH5T6e1dG68h7u0nB0Y="],["mhr-66","「God of Mischief」Loki",3,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a009da74fc0904ea1a0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o7wX7z88yP7k733gY80j444oP9k="],["mhr-67","「Deception」Loki",6,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a059da74fc0904ea1a2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:p0eW8kK5437B755kP84g600aL2E="],["mhr-68","「Master of Magnetism」Magneto",6,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a0b9da74fc0904ea1a4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:xQ8F0y31m11qG17dY33aN75y8Y0="],["mhr-69","「Magnetic Force」Magneto",2,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a109da74fc0904ea1a6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:k7bW0y65bN0nC11fC89fP87z0A4="],["mhr-70","「Frost Walker」Iceman",2,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a159da74fc0904ea1a8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:lA4G2z20m11qG17dY33aN75y8Y0="],["mhr-71","「Absolute Zero」Iceman",3,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a1a9da74fc0904ea1aa?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qK5jK7y5jK7bC29mD49fK77z0B4="],["mhr-72","「Psionic Blade」Psylocke",3,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a1f9da74fc0904ea1ac?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:77fZ6k44fT8kK52kH68wA92q0B0="],["mhr-73","「Telepathy」Jean Grey",6,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a249da74fc0904ea1ae?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:aP9K3s88zP7k733gY80j444oP9k="],["mhr-74","「Dark Phoenix」Jean Grey",6,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a299da74fc0904ea1b0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:s7mY0s88zP7k733gY80j444oP9k="],["mhr-75","「Mystic Barrier」Doctor Strange",1,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a2f9da74fc0904ea1b2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qP8Z5s88zP7k733gY80j444oP9k="],["mhr-76","「Mirror Walk」Doctor Strange",3,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a349da74fc0904ea1b4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:rK9Y0s88zP7k733gY80j444oP9k="],["mhr-77","「Chaos Blast」Scarlet Witch",5,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a399da74fc0904ea1b6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o8bW0s88zP7k733gY80j444oP9k="],["mhr-78","「Photon Blast」Captain Marvel",4,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a3e9da74fc0904ea1b8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:0qY4gC63j11qG17dY33aN75y8Y0="],["mhr-79","「Illusionist」Loki",1,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a439da74fc0904ea1ba?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:3cZ2k77jK52kH68wA92q0B0="],["mhr-80","「Magnetic Shield」Magneto",3,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a489da74fc0904ea1bc?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:20qB1kG5615R6aK0v3wZ677f4G4="],["mhr-81","「Cryo Storm」Iceman",6,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a4d9da74fc0904ea1be?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:5cE5yY99aQ5jK52kH68wA92q0B0="],["mhr-82","「Psychic Shield」Jean Grey",2,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a529da74fc0904ea1c0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qA2o2yK6vH5T6e1dG68h7u0nB0Y="],["mhr-83","「Crimson Bands」Doctor Strange",3,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a579da74fc0904ea1c2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o7wX7z88yP7k733gY80j444oP9k="],["mhr-84","「Probability Control」Scarlet Witch",1,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a5c9da74fc0904ea1c4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:p0eW8kK5437B755kP84g600aL2E="],["mhr-85","「Cosmic Radiance」Captain Marvel",6,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a629da74fc0904ea1c6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:xQ8F0y31m11qG17dY33aN75y8Y0="],["mhr-86","「Turn The Tide」Captain America",4,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a249da74fc0904ea1a4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:J-ITB1-1Oys-deZKCBduwg55kDE="],["mhr-87","「Hostile Focus」Winter Soldier",3,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a299da74fc0904ea1a6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:fC1D8_GllcJgkB2Qd3wFEDnUUD0="],["mhr-88","「Wakanda Forever」New Black Panther",6,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a2e9da74fc0904ea1a8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qEA6R5zpPfq0Evjw3SIyAD2dtnA="],["mhr-89","「Fantastic Calling」Human Torch",4,"Blue","BP01","https://marvel-tcg.janime.cn/6a740a399da74fc0904ea1aa?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:KCytjou6ZNfg8QxtIo3LzjS2XPw="],["mhr-90","「Time Guide」Loki",3,"Blue","BP01","https://marvel-tcg.janime.cn/6a74032a9da74fc0904ea04c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:vZuZjY5YTtdddTA8FeyrUNGO7yY="],["mhr-91","「Shift」New Black Panther",5,"Blue","BP01","https://marvel-tcg.janime.cn/6a7403319da74fc0904ea04e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:5piywI6cQ0exebdA9d1xwyyr0KY="],["mhr-92","「Force Field」Invisible Woman",4,"Blue","BP01","https://marvel-tcg.janime.cn/6a7457db9da74fc0904ea2a0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:KsmRQV0cawFQPuQ_rhEgpVcreV4="],["mhr-93","「Fantastic Calling」Mister Fantastic",6,"Blue","BP01","https://marvel-tcg.janime.cn/6a7457e09da74fc0904ea2a2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:C4tO-s37J1rD1WbN56wN8wW8m9z="],["mhr-94","「Sorcerer Supreme」Doctor Strange",6,"Blue","BP01","https://marvel-tcg.janime.cn/6a7457e59da74fc0904ea2a4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:O9qV3s88zP7k733gY80j444oP9k="],["mhr-95","「Polarity」Magneto",5,"Blue","BP01","https://marvel-tcg.janime.cn/6a7457ea9da74fc0904ea2a6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:P0rW4s88zP7k733gY80j444oP9k="],["mhr-96","「Cryo Freeze」Iceman",4,"Blue","BP01","https://marvel-tcg.janime.cn/6a7457ef9da74fc0904ea2a8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Q1sX5s88zP7k733gY80j444oP9k="],["mhr-97","「Psionic Focus」Psylocke",4,"Blue","BP01","https://marvel-tcg.janime.cn/6a7457f49da74fc0904ea2aa?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:R2tY6s88zP7k733gY80j444oP9k="],["mhr-98","「Phoenix Power」Jean Grey",5,"Blue","BP01","https://marvel-tcg.janime.cn/6a7457f99da74fc0904ea2ac?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:S3uZ7s88zP7k733gY80j444oP9k="],["mhr-99","「Astral Blast」Doctor Strange",2,"Blue","BP01","https://marvel-tcg.janime.cn/6a7457fe9da74fc0904ea2ae?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:T4va8s88zP7k733gY80j444oP9k="],["mhr-100","「Hex Warp」Scarlet Witch",4,"Blue","BP01","https://marvel-tcg.janime.cn/6a7458039da74fc0904ea2b0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:U5wb9s88zP7k733gY80j444oP9k="],["mhr-101","「Cosmic Might」Captain Marvel",3,"Blue","BP01","https://marvel-tcg.janime.cn/6a7458089da74fc0904ea2b2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:V6xc0s88zP7k733gY80j444oP9k="],["mhr-102","「Trickster's Plan」Loki",3,"Blue","BP01","https://marvel-tcg.janime.cn/6a74580d9da74fc0904ea2b4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:W7yd1s88zP7k733gY80j444oP9k="],["mhr-103","「Magnetic Storm」Magneto",1,"Blue","BP01","https://marvel-tcg.janime.cn/6a7458129da74fc0904ea2b6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:X8ze2s88zP7k733gY80j444oP9k="],["mhr-104","「Ice Shield」Iceman",1,"Blue","BP01","https://marvel-tcg.janime.cn/6a7458179da74fc0904ea2b8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Y9af3s88zP7k733gY80j444oP9k="],["mhr-105","「Psionic Strike」Psylocke",1,"Blue","BP01","https://marvel-tcg.janime.cn/6a74581c9da74fc0904ea2ba?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Z0bg4s88zP7k733gY80j444oP9k="],["mhr-106","「Mind Surge」Jean Grey",1,"Blue","BP01","https://marvel-tcg.janime.cn/6a7458219da74fc0904ea2bc?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:A1ch5s88zP7k733gY80j444oP9k="],["mhr-107","「Sanctum Ward」Doctor Strange",5,"Blue","BP01","https://marvel-tcg.janime.cn/6a7458269da74fc0904ea2be?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:B2di6s88zP7k733gY80j444oP9k="],["mhr-108","「Chaos Caster」Scarlet Witch",2,"Blue","BP01","https://marvel-tcg.janime.cn/6a74582b9da74fc0904ea2c0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:C3ej7s88zP7k733gY80j444oP9k="],["mhr-109","「Binary Power」Captain Marvel",2,"Blue","BP01","https://marvel-tcg.janime.cn/6a7458309da74fc0904ea2c2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:D4fk8s88zP7k733gY80j444oP9k="],["mhr-110","「Deceiver」Loki",5,"Blue","BP01","https://marvel-tcg.janime.cn/6a7458359da74fc0904ea2c4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:E5gl9s88zP7k733gY80j444oP9k="],["mhr-111","「Magnetic Wave」Magneto",3,"Blue","BP01","https://marvel-tcg.janime.cn/6a74583a9da74fc0904ea2c6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:F6hm0s88zP7k733gY80j444oP9k="],["mhr-112","「Frostbite」Iceman",5,"Blue","BP01","https://marvel-tcg.janime.cn/6a74583f9da74fc0904ea2c8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:G7in1s88zP7k733gY80j444oP9k="],["mhr-113","「Ninja Focus」Psylocke",6,"Blue","BP01","https://marvel-tcg.janime.cn/6a7458449da74fc0904ea2ca?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:H8jo2s88zP7k733gY80j444oP9k="],["mhr-114","「Phoenix Flame」Jean Grey",4,"Blue","BP01","https://marvel-tcg.janime.cn/6a7458499da74fc0904ea2cc?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:I9kp3s88zP7k733gY80j444oP9k="],["mhr-115","「Master of Mystics」Doctor Strange",3,"Blue","SD02","https://marvel-tcg.janime.cn/6a74584e9da74fc0904ea2ce?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:J0lq4s88zP7k733gY80j444oP9k="],["mhr-116","「Hex Magic」Scarlet Witch",3,"Blue","SD02","https://marvel-tcg.janime.cn/6a7458539da74fc0904ea2d0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:K1mr5s88zP7k733gY80j444oP9k="],["mhr-117","「Captain Marvel Flight」Captain Marvel",5,"Blue","SD02","https://marvel-tcg.janime.cn/6a7458589da74fc0904ea2d2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:L2ns6s88zP7k733gY80j444oP9k="],["mhr-118","「Loki's Cunning」Loki",3,"Blue","SD02","https://marvel-tcg.janime.cn/6a74585d9da74fc0904ea2d4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:M3ot7s88zP7k733gY80j444oP9k="],["mhr-119","「Sorcerer Guardian」Doctor Strange",6,"Blue","SD02","https://marvel-tcg.janime.cn/6a7458629da74fc0904ea2d6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:N4pu8s88zP7k733gY80j444oP9k="],["mhr-120","「Shield Strike」Captain America",3,"Green","BP01","https://marvel-tcg.janime.cn/6a7407009da74fc0904ea120?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Z0tP5y1dF78jN48wN8wW8m9zP3A="],["mhr-121","「Avenger's Courage」Captain America",6,"Green","BP01","https://marvel-tcg.janime.cn/6a7407059da74fc0904ea122?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:0qY4gC63j11qG17dY33aN75y8Y0="],["mhr-122","「Gamma Smasher」She-Hulk",6,"Green","BP01","https://marvel-tcg.janime.cn/6a74070a9da74fc0904ea124?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:3cZ2k77jK52kH68wA92q0B0="],["mhr-123","「Legal Action」She-Hulk",3,"Green","BP01","https://marvel-tcg.janime.cn/6a74070f9da74fc0904ea126?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:20qB1kG5615R6aK0v3wZ677f4G4="],["mhr-124","「Ancient Tree」Groot",6,"Green","BP01","https://marvel-tcg.janime.cn/6a7407149da74fc0904ea128?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:5cE5yY99aQ5jK52kH68wA92q0B0="],["mhr-125","「Wood Shield」Groot",2,"Green","BP01","https://marvel-tcg.janime.cn/6a7407199da74fc0904ea12a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qA2o2yK6vH5T6e1dG68h7u0nB0Y="],["mhr-126","「Size Shift」Ant-Man",1,"Green","BP01","https://marvel-tcg.janime.cn/6a74071e9da74fc0904ea12c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o7wX7z88yP7k733gY80j444oP9k="],["mhr-127","「Colossus Stride」Ant-Man",6,"Green","BP01","https://marvel-tcg.janime.cn/6a7407239da74fc0904ea12e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:p0eW8kK5437B755kP84g600aL2E="],["mhr-128","「Stinger」Wasp",3,"Green","BP01","https://marvel-tcg.janime.cn/6a7407289da74fc0904ea130?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:xQ8F0y31m11qG17dY33aN75y8Y0="],["mhr-129","「Aerial Attack」Wasp",4,"Green","BP01","https://marvel-tcg.janime.cn/6a74072d9da74fc0904ea132?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:k7bW0y65bN0nC11fC89fP87z0A4="],["mhr-130","「Savage Wolverine」Wolverine",3,"Green","BP01","https://marvel-tcg.janime.cn/6a7407329da74fc0904ea134?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:lA4G2z20m11qG17dY33aN75y8Y0="],["mhr-131","「Rage Claws」Wolverine",6,"Green","BP01","https://marvel-tcg.janime.cn/6a7407379da74fc0904ea136?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qK5jK7y5jK7bC29mD49fK77z0B4="],["mhr-132","「Regen Power」Wolverine",2,"Green","BP01","https://marvel-tcg.janime.cn/6a74073c9da74fc0904ea138?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:77fZ6k44fT8kK52kH68wA92q0B0="],["mhr-133","「Captain Shield」Captain America",2,"Green","BP01","https://marvel-tcg.janime.cn/6a7407419da74fc0904ea13a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:aP9K3s88zP7k733gY80j444oP9k="],["mhr-134","「Lawyer Smash」She-Hulk",1,"Green","BP01","https://marvel-tcg.janime.cn/6a7407469da74fc0904ea13c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:s7mY0s88zP7k733gY80j444oP9k="],["mhr-135","「Bark Armor」Groot",3,"Green","BP01","https://marvel-tcg.janime.cn/6a74074b9da74fc0904ea13e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qP8Z5s88zP7k733gY80j444oP9k="],["mhr-136","「Shrink Strike」Ant-Man",3,"Green","BP01","https://marvel-tcg.janime.cn/6a7407509da74fc0904ea140?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:rK9Y0s88zP7k733gY80j444oP9k="],["mhr-137","「Wasp Flight」Wasp",2,"Green","BP01","https://marvel-tcg.janime.cn/6a7407559da74fc0904ea142?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o8bW0s88zP7k733gY80j444oP9k="],["mhr-138","「Adamantium Rage」Wolverine",4,"Green","BP01","https://marvel-tcg.janime.cn/6a74075a9da74fc0904ea144?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:0qY4gC63j11qG17dY33aN75y8Y0="],["mhr-139","「Leader of Avengers」Captain America",4,"Green","BP01","https://marvel-tcg.janime.cn/6a74075f9da74fc0904ea146?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:3cZ2k77jK52kH68wA92q0B0="],["mhr-140","「Hulk's Cousin」She-Hulk",5,"Green","BP01","https://marvel-tcg.janime.cn/6a7407649da74fc0904ea148?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:20qB1kG5615R6aK0v3wZ677f4G4="],["mhr-141","「Forest Force」Groot",4,"Green","BP01","https://marvel-tcg.janime.cn/6a7407699da74fc0904ea14a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:5cE5yY99aQ5jK52kH68wA92q0B0="],["mhr-142","「Insect Master」Ant-Man",2,"Green","BP01","https://marvel-tcg.janime.cn/6a74076e9da74fc0904ea14c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qA2o2yK6vH5T6e1dG68h7u0nB0Y="],["mhr-143","「Bio Shock」Wasp",5,"Green","BP01","https://marvel-tcg.janime.cn/6a7407739da74fc0904ea14e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o7wX7z88yP7k733gY80j444oP9k="],["mhr-144","「Feral Rage」Wolverine",5,"Green","BP01","https://marvel-tcg.janime.cn/6a7407789da74fc0904ea150?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:p0eW8kK5437B755kP84g600aL2E="],["mhr-145","「Patriot Strike」Captain America",5,"Green","BP01","https://marvel-tcg.janime.cn/6a74077d9da74fc0904ea152?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:xQ8F0y31m11qG17dY33aN75y8Y0="],["mhr-146","「Super Lawyer」She-Hulk",4,"Green","BP01","https://marvel-tcg.janime.cn/6a7407829da74fc0904ea154?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:k7bW0y65bN0nC11fC89fP87z0A4="],["mhr-147","「Sapling Shield」Groot",1,"Green","BP01","https://marvel-tcg.janime.cn/6a7407879da74fc0904ea156?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:lA4G2z20m11qG17dY33aN75y8Y0="],["mhr-148","「Giant Hero」Ant-Man",4,"Green","BP01","https://marvel-tcg.janime.cn/6a74078c9da74fc0904ea158?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qK5jK7y5jK7bC29mD49fK77z0B4="],["mhr-149","「Sting Pulse」Wasp",1,"Green","BP01","https://marvel-tcg.janime.cn/6a7407919da74fc0904ea15a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:77fZ6k44fT8kK52kH68wA92q0B0="],["mhr-150","「Logan」Wolverine",6,"Green","BP01","https://marvel-tcg.janime.cn/6a7407969da74fc0904ea15c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:aP9K3s88zP7k733gY80j444oP9k="],["mhr-151","「Freedom Fighter」Captain America",1,"Green","BP01","https://marvel-tcg.janime.cn/6a74079b9da74fc0904ea15e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:s7mY0s88zP7k733gY80j444oP9k="],["mhr-152","「Green Attorney」She-Hulk",2,"Green","BP01","https://marvel-tcg.janime.cn/6a7407a09da74fc0904ea160?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qP8Z5s88zP7k733gY80j444oP9k="],["mhr-153","「Bark Shield」Groot",5,"Green","BP01","https://marvel-tcg.janime.cn/6a7407a59da74fc0904ea162?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:rK9Y0s88zP7k733gY80j444oP9k="],["mhr-154","「Quantum Stride」Ant-Man",5,"Green","BP01","https://marvel-tcg.janime.cn/6a7407aa9da74fc0904ea164?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o8bW0s88zP7k733gY80j444oP9k="],["mhr-155","「Bio Pulse」Wasp",6,"Green","BP01","https://marvel-tcg.janime.cn/6a7407af9da74fc0904ea166?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:0qY4gC63j11qG17dY33aN75y8Y0="],["mhr-156","「Savage Logan」Wolverine",1,"Green","BP01","https://marvel-tcg.janime.cn/6a7407b49da74fc0904ea168?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:3cZ2k77jK52kH68wA92q0B0="],["mhr-157","「Shield Master」Captain America",3,"Green","SD03","https://marvel-tcg.janime.cn/6a7407b99da74fc0904ea16a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:20qB1kG5615R6aK0v3wZ677f4G4="],["mhr-158","「She-Hulk Defense」She-Hulk",3,"Green","SD03","https://marvel-tcg.janime.cn/6a7407be9da74fc0904ea16c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:5cE5yY99aQ5jK52kH68wA92q0B0="],["mhr-159","「Groot Protector」Groot",3,"Green","SD03","https://marvel-tcg.janime.cn/6a7407c39da74fc0904ea16e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qA2o2yK6vH5T6e1dG68h7u0nB0Y="],["mhr-160","「Giant Growth」Ant-Man",6,"Green","SD03","https://marvel-tcg.janime.cn/6a7407c89da74fc0904ea170?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o7wX7z88yP7k733gY80j444oP9k="],["mhr-161","「Liberty Guard」Captain America",6,"Green","SD03","https://marvel-tcg.janime.cn/6a7407cd9da74fc0904ea172?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:p0eW8kK5437B755kP84g600aL2E="],["mhr-162","「Bow Master」Hawkeye",3,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408009da74fc0904ea180?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Z0tP5y1dF78jN48wN8wW8m9zP3A="],["mhr-163","「Bullseye Precision」Hawkeye",6,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408059da74fc0904ea182?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:0qY4gC63j11qG17dY33aN75y8Y0="],["mhr-164","「Web Strike」Spider-Man",1,"Yellow","BP01","https://marvel-tcg.janime.cn/6a74080a9da74fc0904ea184?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:3cZ2k77jK52kH68wA92q0B0="],["mhr-165","「Spider Agility」Spider-Man",3,"Yellow","BP01","https://marvel-tcg.janime.cn/6a74080f9da74fc0904ea186?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:20qB1kG5615R6aK0v3wZ677f4G4="],["mhr-166","「Amazing Spider」Spider-Man",6,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408149da74fc0904ea188?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:5cE5yY99aQ5jK52kH68wA92q0B0="],["mhr-167","「Venom Power」Miles Morales",3,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408199da74fc0904ea18a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qA2o2yK6vH5T6e1dG68h7u0nB0Y="],["mhr-168","「Stealth Suit」Miles Morales",2,"Yellow","BP01","https://marvel-tcg.janime.cn/6a74081e9da74fc0904ea18c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o7wX7z88yP7k733gY80j444oP9k="],["mhr-169","「Electric Venom」Miles Morales",6,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408239da74fc0904ea18e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:p0eW8kK5437B755kP84g600aL2E="],["mhr-170","「Wade Wilson」Deadpool",3,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408289da74fc0904ea190?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:xQ8F0y31m11qG17dY33aN75y8Y0="],["mhr-171","「Katana Strike」Deadpool",4,"Yellow","BP01","https://marvel-tcg.janime.cn/6a74082d9da74fc0904ea192?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:k7bW0y65bN0nC11fC89fP87z0A4="],["mhr-172","「Deadpool's Fury」Deadpool",6,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408329da74fc0904ea194?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:lA4G2z20m11qG17dY33aN75y8Y0="],["mhr-173","「Arrow Shot」Hawkeye",4,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408379da74fc0904ea196?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qK5jK7y5jK7bC29mD49fK77z0B4="],["mhr-174","「Spider Dodge」Spider-Man",2,"Yellow","BP01","https://marvel-tcg.janime.cn/6a74083c9da74fc0904ea198?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:77fZ6k44fT8kK52kH68wA92q0B0="],["mhr-175","「Bio Electric」Miles Morales",1,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408419da74fc0904ea19a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:aP9K3s88zP7k733gY80j444oP9k="],["mhr-176","「Crazy Merc」Deadpool",1,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408469da74fc0904ea19c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:s7mY0s88zP7k733gY80j444oP9k="],["mhr-177","「Shock Arrow」Hawkeye",2,"Yellow","BP01","https://marvel-tcg.janime.cn/6a74084b9da74fc0904ea19e?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qP8Z5s88zP7k733gY80j444oP9k="],["mhr-178","「Web Trap」Spider-Man",4,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408509da74fc0904ea1a0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:rK9Y0s88zP7k733gY80j444oP9k="],["mhr-179","「Invis Attack」Miles Morales",4,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408559da74fc0904ea1a2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o8bW0s88zP7k733gY80j444oP9k="],["mhr-180","「Dual Pistols」Deadpool",5,"Yellow","BP01","https://marvel-tcg.janime.cn/6a74085a9da74fc0904ea1a4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:0qY4gC63j11qG17dY33aN75y8Y0="],["mhr-181","「Sonic Burst」Hawkeye",5,"Yellow","BP01","https://marvel-tcg.janime.cn/6a74085f9da74fc0904ea1a6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:3cZ2k77jK52kH68wA92q0B0="],["mhr-182","「Web Swinger」Spider-Man",5,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408649da74fc0904ea1a8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:20qB1kG5615R6aK0v3wZ677f4G4="],["mhr-183","「Spider Net」Miles Morales",5,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408699da74fc0904ea1aa?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:5cE5yY99aQ5jK52kH68wA92q0B0="],["mhr-184","「Healing Hero」Deadpool",2,"Yellow","BP01","https://marvel-tcg.janime.cn/6a74086e9da74fc0904ea1ac?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qA2o2yK6vH5T6e1dG68h7u0nB0Y="],["mhr-185","「Archer's Aim」Hawkeye",1,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408739da74fc0904ea1ae?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o7wX7z88yP7k733gY80j444oP9k="],["mhr-186","「Peter Parker」Spider-Man",3,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408789da74fc0904ea1b0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:p0eW8kK5437B755kP84g600aL2E="],["mhr-187","「Venom Zap」Miles Morales",3,"Yellow","BP01","https://marvel-tcg.janime.cn/6a74087d9da74fc0904ea1b2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:xQ8F0y31m11qG17dY33aN75y8Y0="],["mhr-188","「Deadpool Strike」Deadpool",3,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408829da74fc0904ea1b4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:k7bW0y65bN0nC11fC89fP87z0A4="],["mhr-189","「Sniper」Hawkeye",6,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408879da74fc0904ea1b6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:lA4G2z20m11qG17dY33aN75y8Y0="],["mhr-190","「Spider Sense」Spider-Man",2,"Yellow","BP01","https://marvel-tcg.janime.cn/6a74088c9da74fc0904ea1b8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qK5jK7y5jK7bC29mD49fK77z0B4="],["mhr-191","「Miles Shock」Miles Morales",2,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408919da74fc0904ea1ba?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:77fZ6k44fT8kK52kH68wA92q0B0="],["mhr-192","「Kaboom」Deadpool",4,"Yellow","BP01","https://marvel-tcg.janime.cn/6a7408969da74fc0904ea1bc?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:aP9K3s88zP7k733gY80j444oP9k="],["mhr-193","「Hawkeye Shot」Hawkeye",3,"Yellow","SD04","https://marvel-tcg.janime.cn/6a74089b9da74fc0904ea1be?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:s7mY0s88zP7k733gY80j444oP9k="],["mhr-194","「Spider Hero」Spider-Man",3,"Yellow","SD04","https://marvel-tcg.janime.cn/6a7408a09da74fc0904ea1c0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qP8Z5s88zP7k733gY80j444oP9k="],["mhr-195","「Venom Strike」Miles Morales",4,"Yellow","SD04","https://marvel-tcg.janime.cn/6a7408a59da74fc0904ea1c2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:rK9Y0s88zP7k733gY80j444oP9k="],["mhr-196","「Healing Wade」Deadpool",3,"Yellow","SD04","https://marvel-tcg.janime.cn/6a7408aa9da74fc0904ea1c4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o8bW0s88zP7k733gY80j444oP9k="],["mhr-197","「Heroic Spider」Spider-Man",6,"Yellow","SD04","https://marvel-tcg.janime.cn/6a7408af9da74fc0904ea1c6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:0qY4gC63j11qG17dY33aN75y8Y0="],["mhr-198","「Iron Core」Iron Man",1,"Red","SD01","https://marvel-tcg.janime.cn/6a7408b49da74fc0904ea1c8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:3cZ2k77jK52kH68wA92q0B0="],["mhr-199","「Thor's Might」Thor",5,"Red","SD01","https://marvel-tcg.janime.cn/6a7408b99da74fc0904ea1ca?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:20qB1kG5615R6aK0v3wZ677f4G4="],["mhr-200","「Hulk's Power」Hulk",5,"Red","SD01","https://marvel-tcg.janime.cn/6a7408be9da74fc0904ea1cc?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:5cE5yY99aQ5jK52kH68wA92q0B0="],["mhr-201","「Panther Force」Black Panther",2,"Red","SD01","https://marvel-tcg.janime.cn/6a7408c39da74fc0904ea1ce?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qA2o2yK6vH5T6e1dG68h7u0nB0Y="],["mhr-202","「Vision's Light」Vision",5,"Red","SD01","https://marvel-tcg.janime.cn/6a7408c89da74fc0904ea1d0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o7wX7z88yP7k733gY80j444oP9k="],["mhr-203","「Widow Strike」Black Widow",6,"Red","SD01","https://marvel-tcg.janime.cn/6a7408cd9da74fc0904ea1d2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:p0eW8kK5437B755kP84g600aL2E="],["mhr-204","「Ultron Army」Ultron",5,"Red","SD01","https://marvel-tcg.janime.cn/6a7408d29da74fc0904ea1d4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:xQ8F0y31m11qG17dY33aN75y8Y0="],["mhr-205","「Iron Armor」Iron Man",3,"Red","SD01","https://marvel-tcg.janime.cn/6a7408d79da74fc0904ea1d6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:k7bW0y65bN0nC11fC89fP87z0A4="],["mhr-206","「Thor's Hammer」Thor",2,"Red","SD01","https://marvel-tcg.janime.cn/6a7408dc9da74fc0904ea1d8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:lA4G2z20m11qG17dY33aN75y8Y0="],["mhr-207","「Hulk's Rage」Hulk",1,"Red","SD01","https://marvel-tcg.janime.cn/6a7408e19da74fc0904ea1da?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qK5jK7y5jK7bC29mD49fK77z0B4="],["mhr-208","「Strange Spell」Doctor Strange",1,"Blue","SD02","https://marvel-tcg.janime.cn/6a7408e69da74fc0904ea1dc?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:77fZ6k44fT8kK52kH68wA92q0B0="],["mhr-209","「Chaos Hex」Scarlet Witch",3,"Blue","SD02","https://marvel-tcg.janime.cn/6a7408eb9da74fc0904ea1de?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:aP9K3s88zP7k733gY80j444oP9k="],["mhr-210","「Cosmic Hero」Captain Marvel",4,"Blue","SD02","https://marvel-tcg.janime.cn/6a7408f09da74fc0904ea1e0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:s7mY0s88zP7k733gY80j444oP9k="],["mhr-211","「Loki Illusion」Loki",2,"Blue","SD02","https://marvel-tcg.janime.cn/6a7408f59da74fc0904ea1e2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qP8Z5s88zP7k733gY80j444oP9k="],["mhr-212","「Magnetic Pull」Magneto",6,"Blue","SD02","https://marvel-tcg.janime.cn/6a7408fa9da74fc0904ea1e4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:rK9Y0s88zP7k733gY80j444oP9k="],["mhr-213","「Ice Blast」Iceman",3,"Blue","SD02","https://marvel-tcg.janime.cn/6a7408ff9da74fc0904ea1e6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o8bW0s88zP7k733gY80j444oP9k="],["mhr-214","「Psionic Warrior」Psylocke",5,"Blue","SD02","https://marvel-tcg.janime.cn/6a7409049da74fc0904ea1e8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:0qY4gC63j11qG17dY33aN75y8Y0="],["mhr-215","「Phoenix Flame」Jean Grey",3,"Blue","SD02","https://marvel-tcg.janime.cn/6a7409099da74fc0904ea1ea?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:3cZ2k77jK52kH68wA92q0B0="],["mhr-216","「Sorcerer Master」Doctor Strange",6,"Blue","SD02","https://marvel-tcg.janime.cn/6a74090e9da74fc0904ea1ec?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:20qB1kG5615R6aK0v3wZ677f4G4="],["mhr-217","「Shield Master」Captain America",2,"Green","SD03","https://marvel-tcg.janime.cn/6a7409139da74fc0904ea1ee?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:5cE5yY99aQ5jK52kH68wA92q0B0="],["mhr-218","「She-Hulk Lawyer」She-Hulk",1,"Green","SD03","https://marvel-tcg.janime.cn/6a7409189da74fc0904ea1f0?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qA2o2yK6vH5T6e1dG68h7u0nB0Y="],["mhr-219","「Groot Tree」Groot",4,"Green","SD03","https://marvel-tcg.janime.cn/6a74091d9da74fc0904ea1f2?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o7wX7z88yP7k733gY80j444oP9k="],["mhr-220","「Ant-Man Size」Ant-Man",3,"Green","SD03","https://marvel-tcg.janime.cn/6a7409229da74fc0904ea1f4?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:p0eW8kK5437B755kP84g600aL2E="],["mhr-221","「Wasp Wings」Wasp",3,"Green","SD03","https://marvel-tcg.janime.cn/6a7409279da74fc0904ea1f6?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:xQ8F0y31m11qG17dY33aN75y8Y0="],["mhr-222","「Logan Claw」Wolverine",4,"Green","SD03","https://marvel-tcg.janime.cn/6a74092c9da74fc0904ea1f8?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:k7bW0y65bN0nC11fC89fP87z0A4="],["mhr-223","「First Hero」Captain America",4,"Green","SD03","https://marvel-tcg.janime.cn/6a7409319da74fc0904ea1fa?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:lA4G2z20m11qG17dY33aN75y8Y0="],["mhr-224","「Sensational」She-Hulk",5,"Green","SD03","https://marvel-tcg.janime.cn/6a7409369da74fc0904ea1fc?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qK5jK7y5jK7bC29mD49fK77z0B4="],["mhr-225","「Archer」Hawkeye",2,"Yellow","SD04","https://marvel-tcg.janime.cn/6a74093b9da74fc0904ea1fe?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:77fZ6k44fT8kK52kH68wA92q0B0="],["mhr-226","「Spider Swing」Spider-Man",4,"Yellow","SD04","https://marvel-tcg.janime.cn/6a7409409da74fc0904ea200?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:aP9K3s88zP7k733gY80j444oP9k="],["mhr-227","「Miles Venom」Miles Morales",3,"Yellow","SD04","https://marvel-tcg.janime.cn/6a7409459da74fc0904ea202?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:s7mY0s88zP7k733gY80j444oP9k="],["mhr-228","「Wade's Guns」Deadpool",2,"Yellow","SD04","https://marvel-tcg.janime.cn/6a74094a9da74fc0904ea204?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qP8Z5s88zP7k733gY80j444oP9k="],["mhr-229","「Hawkeye's Bow」Hawkeye",5,"Yellow","SD04","https://marvel-tcg.janime.cn/6a74094f9da74fc0904ea206?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:rK9Y0s88zP7k733gY80j444oP9k="],["mhr-230","「Peter's Leap」Spider-Man",1,"Yellow","SD04","https://marvel-tcg.janime.cn/6a7409549da74fc0904ea208?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:o8bW0s88zP7k733gY80j444oP9k="],["mhr-231","「Miles Leap」Miles Morales",6,"Yellow","SD04","https://marvel-tcg.janime.cn/6a7409599da74fc0904ea20a?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:0qY4gC63j11qG17dY33aN75y8Y0="],["mhr-232","「Deadpool Sword」Deadpool",5,"Yellow","SD04","https://marvel-tcg.janime.cn/6a74095e9da74fc0904ea20c?e=1786977825&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:3cZ2k77jK52kH68wA92q0B0="],["mhr-233","「Run&Search」Winter Soldier",3,"Green","SD04","https://marvel-tcg.janime.cn/6a7556399da74fc0904ea477?e=1786978588&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:amUEEXYgJZ7mThlhGOYUSiJGFyY="]];
+
+    // Unpack into objects
+    let CARD_DATABASE = RAW_COMPACT_CARDS.map(item => ({
+      id: item[0],
+      name: item[1],
+      level: item[2],
+      color: item[3],
+      set: item[4],
+      image: item[5]
+    }));
+
+    const MAX_DECK_SIZE = 50;
+    const MAX_COPIES_PER_CARD = 3;
+    const MAX_COLORS_PER_DECK = 2;
+
+    const COLOR_THEMES = {
+      Red: {
+        pill: 'bg-red-500/20 text-red-400 border-red-500/40',
+        badge: 'bg-red-950 text-red-400 border-red-800',
+        border: 'border-red-900/60 hover:border-red-500',
+        dot: 'bg-red-500'
+      },
+      Blue: {
+        pill: 'bg-blue-500/20 text-blue-400 border-blue-500/40',
+        badge: 'bg-blue-950 text-blue-400 border-blue-800',
+        border: 'border-blue-900/60 hover:border-blue-500',
+        dot: 'bg-blue-500'
+      },
+      Green: {
+        pill: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40',
+        badge: 'bg-emerald-950 text-emerald-400 border-emerald-800',
+        border: 'border-emerald-900/60 hover:border-emerald-500',
+        dot: 'bg-emerald-500'
+      },
+      Yellow: {
+        pill: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+        badge: 'bg-amber-950 text-amber-300 border-amber-800',
+        border: 'border-amber-900/60 hover:border-amber-500',
+        dot: 'bg-amber-400'
+      }
+    };
+
+    // ==========================================
+    // 2. APPLICATION LOGIC & STATE
+    // ==========================================
     const app = {
       deck: {},
       search: '',
@@ -185,32 +261,9 @@
       cardSize: 'large',
       drawnHand: [],
       
-      async init() {
+      init() {
         this.setupEventListeners();
-        await this.loadCards();
         this.renderAll();
-      },
-
-      async loadCards() {
-        // Automatically reads from local excel or fallback to embedded file
-        try {
-          const res = await fetch('marvel_hero_rush_cards (2) (1).xlsx');
-          if (res.ok) {
-            const buf = await res.arrayBuffer();
-            const wb = XLSX.read(new Uint8Array(buf), { type: 'array' });
-            const sheet = wb.Sheets[wb.SheetNames[0]];
-            const json = XLSX.utils.sheet_to_json(sheet);
-            CARD_DATABASE = json.map((row, idx) => ({
-              id: `mhr-${idx+1}`,
-              name: String(row['Card Name'] || row.Name || `Card ${idx+1}`).trim(),
-              level: parseInt(row.Level || 1, 10),
-              color: String(row.Colour || row.Color || 'Red').trim().charAt(0).toUpperCase() + String(row.Colour || row.Color || 'Red').trim().slice(1).toLowerCase(),
-              set: String(row['Card Set'] || row.Set || 'BP01').trim(),
-              image: String(row['Card Image'] || row.Image || '').trim()
-            }));
-            return;
-          }
-        } catch (e) {}
       },
 
       setCardSize(size) {
@@ -221,8 +274,10 @@
       openArtZoom(cardId) {
         const card = CARD_DATABASE.find(c => c.id === cardId);
         if (!card || !card.image) return;
+
         document.getElementById('zoom-card-name').innerText = `${card.name} (Lv.${card.level} • ${card.color} • ${card.set})`;
         document.getElementById('zoom-card-img').src = card.image;
+
         const modal = document.getElementById('art-zoom-modal');
         modal.classList.remove('hidden');
         void modal.offsetWidth;
@@ -296,13 +351,17 @@
       addCard(id) {
         const card = CARD_DATABASE.find(c => c.id === id);
         if (!card) return;
+
         const total = this.getTotalCards();
         const current = this.deck[id] || 0;
+
         if (total >= MAX_DECK_SIZE || current >= MAX_COPIES_PER_CARD) return;
+
         if (!this.isColorAllowed(card.color)) {
           alert(`Color Limit Reached! A deck can only contain up to ${MAX_COLORS_PER_DECK} colors.`);
           return;
         }
+        
         this.deck[id] = current + 1;
         this.renderAll();
       },
@@ -334,13 +393,16 @@
           const sanitized = {};
           const colorsUsed = new Set();
           let count = 0;
+
           for (const [id, qty] of Object.entries(parsed)) {
             const card = CARD_DATABASE.find(c => c.id === id);
             if (!card) continue;
+
             if (!colorsUsed.has(card.color)) {
               if (colorsUsed.size >= MAX_COLORS_PER_DECK) continue;
               colorsUsed.add(card.color);
             }
+
             const cappedQty = Math.min(qty, MAX_COPIES_PER_CARD);
             if (count + cappedQty <= MAX_DECK_SIZE) {
               sanitized[id] = cappedQty;
@@ -358,6 +420,7 @@
       handleExcelUpload(e) {
         const file = e.target.files[0];
         if (!file) return;
+
         const reader = new FileReader();
         reader.onload = (evt) => {
           try {
@@ -365,10 +428,12 @@
             const workbook = XLSX.read(data, { type: 'array' });
             const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
             if (!jsonData || jsonData.length === 0) {
               alert('Uploaded sheet is empty!');
               return;
             }
+
             CARD_DATABASE = jsonData.map((row, idx) => ({
               id: `imported-${Date.now()}-${idx}`,
               name: String(row['Card Name'] || row.Name || `Card ${idx + 1}`).trim(),
@@ -377,6 +442,7 @@
               set: String(row['Card Set'] || row.Set || 'BP01').trim(),
               image: String(row['Card Image'] || row.Image || '').trim()
             }));
+
             app.deck = {};
             app.renderAll();
             app.showToast(`Successfully loaded ${CARD_DATABASE.length} cards from Excel!`);
@@ -396,12 +462,15 @@
             for (let i = 0; i < qty; i++) flattenedDeck.push({ ...card, uid: `${id}-${i}` });
           }
         });
+
         for (let i = flattenedDeck.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [flattenedDeck[i], flattenedDeck[j]] = [flattenedDeck[j], flattenedDeck[i]];
         }
+
         this.drawnHand = flattenedDeck.slice(0, 5);
         this.renderModal();
+        
         const modal = document.getElementById('modal-overlay');
         const content = document.getElementById('modal-content');
         modal.classList.remove('hidden');
@@ -425,7 +494,9 @@
         this.renderCatalog();
         this.renderDeckStats();
         this.renderDeckList();
-        lucide.createIcons();
+        if (window.lucide && window.lucide.createIcons) {
+          lucide.createIcons();
+        }
       },
 
       renderSizeButtons() {
@@ -733,7 +804,9 @@
               </div>
             </div>`;
         }).join('');
-        lucide.createIcons();
+        if (window.lucide && window.lucide.createIcons) {
+          lucide.createIcons();
+        }
       },
 
       setupEventListeners() {
