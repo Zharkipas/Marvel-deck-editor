@@ -33,7 +33,7 @@
         <h1 class="text-xl font-black tracking-tight text-white flex items-center gap-2 uppercase font-mono">
           Marvel Hero Rush <span class="text-xs bg-slate-800 text-amber-400 px-2.5 py-0.5 rounded-md border border-slate-700 font-medium">50 Cards • Max 2 Colors</span>
         </h1>
-        <p class="text-xs text-slate-400">Levels 1–6 • Max 3 Copies/Card • Adjustable Artwork Sizing</p>
+        <p class="text-xs text-slate-400">Levels 1–6 • Max 3 Copies/Card • 233 Official Cards Loaded</p>
       </div>
     </div>
 
@@ -45,10 +45,10 @@
       </label>
       <div class="h-4 w-px bg-slate-700 mx-1 hidden sm:block"></div>
       <button onclick="app.copyDeckCode()" id="btn-export" class="flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-300 border border-slate-700 transition">
-        <i data-lucide="download" class="w-4 h-4"></i> Export
+        <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
       </button>
       <button onclick="app.importDeckCode()" class="flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-        <i data-lucide="upload" class="w-4 h-4"></i> Import
+        <i data-lucide="upload" class="w-3.5 h-3.5"></i> Import
       </button>
     </div>
   </header>
@@ -67,7 +67,7 @@
         <div class="flex items-center gap-3">
           <div class="relative flex-1">
             <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
-            <input type="text" id="search-input" placeholder="Search card names..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-slate-500" />
+            <input type="text" id="search-input" placeholder="Search 233 card names..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-slate-500" />
           </div>
 
           <!-- Card Size Buttons -->
@@ -81,11 +81,14 @@
           </div>
         </div>
 
-        <!-- Color & Level Filters -->
+        <!-- Color, Level & Card Set Filters -->
         <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-800/80">
           <div class="flex items-center gap-1.5" id="color-filters"></div>
           <div class="flex items-center gap-1.5" id="level-filters">
             <span class="text-xs text-slate-500 mr-1 font-medium">Level:</span>
+          </div>
+          <div class="flex items-center gap-1.5" id="set-filters">
+            <span class="text-xs text-slate-500 mr-1 font-medium">Set:</span>
           </div>
         </div>
       </div>
@@ -205,96 +208,10 @@
     </div>
   </div>
 
+  <!-- Excel File Auto-Loader Script -->
   <script>
-    // ==========================================
-    // 1. CARDS IMPORTED FROM YOUR EXCEL FILE
-    // ==========================================
-    let CARD_DATABASE = [
-      {
-        "id": "mhr-1",
-        "name": "「Antimatter」Iron Man",
-        "level": 1,
-        "color": "Red",
-        "image": "https://marvel-tcg.janime.cn/6a74579b9da74fc0904ea27c?e=1786975637&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:n1PM1t2Jev7xzpiGm70b5HFO0E0="
-      },
-      {
-        "id": "mhr-2",
-        "name": "「Covert Ops」Black Widow",
-        "level": 1,
-        "color": "Red",
-        "image": "https://marvel-tcg.janime.cn/6a73ff419da74fc0904e9ff8?e=1786975637&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:qXpaGyLfnSFoytL-0q-1nzJaVpA="
-      },
-      {
-        "id": "mhr-3",
-        "name": "「Thunder Ally」Thor",
-        "level": 1,
-        "color": "Red",
-        "image": "https://marvel-tcg.janime.cn/6a7455879da74fc0904ea26d?e=1786975637&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:bSoslYH5g9y6K8lo5wbhpvWkfWc="
-      },
-      {
-        "id": "mhr-4",
-        "name": "「Never Back Down」Hulk",
-        "level": 1,
-        "color": "Red",
-        "image": "https://marvel-tcg.janime.cn/6a7409bd9da74fc0904ea188?e=1786975637&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:JpkJ7ATaVs54auhfXISRGgMl4N8="
-      },
-      {
-        "id": "mhr-5",
-        "name": "「Red Room Experiment Subject」Black Widow",
-        "level": 1,
-        "color": "Red",
-        "image": "https://marvel-tcg.janime.cn/6a7409c59da74fc0904ea18a?e=1786975637&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:gElFGpue9Wl_l7WceJgkZj5yWng="
-      },
-      {
-        "id": "mhr-6",
-        "name": "「Silent Hunter」Black Panther",
-        "level": 1,
-        "color": "Red",
-        "image": "https://marvel-tcg.janime.cn/6a7457aa9da74fc0904ea284?e=1786975637&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:Vv_jNeYu8XGeOvyc2RJKfFKcZ9k="
-      },
-      {
-        "id": "mhr-7",
-        "name": "「Void Reforge」Vision",
-        "level": 1,
-        "color": "Red",
-        "image": "https://marvel-tcg.janime.cn/6a7457ad9da74fc0904ea286?e=1786975637&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:MWBaKjhzQ8E2a01HmYioSrOp7A0="
-      },
-      {
-        "id": "mhr-8",
-        "name": "「Pulse Uninstall」War Machine",
-        "level": 1,
-        "color": "Red",
-        "image": "https://marvel-tcg.janime.cn/6a7409e79da74fc0904ea190?e=1786975637&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:LjdXj_FXTS7dwbHhvrDGIk82LyQ="
-      },
-      {
-        "id": "mhr-9",
-        "name": "「Pulse Assembler」Iron Man",
-        "level": 1,
-        "color": "Red",
-        "image": "https://marvel-tcg.janime.cn/6a7409ec9da74fc0904ea192?e=1786975637&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:lA_A00gqiFjWXhiajxdLTRsirk8="
-      },
-      {
-        "id": "mhr-10",
-        "name": "「Evolution Protocol」Ultron",
-        "level": 1,
-        "color": "Red",
-        "image": "https://marvel-tcg.janime.cn/6a7402bd9da74fc0904ea02c?e=1786975637&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:NbEOenMmzNzAW89LqmVlWW2FIEM="
-      },
-      {
-        "id": "mhr-11",
-        "name": "「Thunder Speed」Thor",
-        "level": 1,
-        "color": "Red",
-        "image": "https://marvel-tcg.janime.cn/6a7402c99da74fc0904ea02e?e=1786975637&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:DL1fFMtl5wjkHnDOrTvrTqKlr1I="
-      },
-      {
-        "id": "mhr-12",
-        "name": "「Thunder Charge」Thor",
-        "level": 1,
-        "color": "Red",
-        "image": "https://marvel-tcg.janime.cn/6a7402d19da74fc0904ea030?e=1786975637&token=dxX6EkvGO2QtG3VBlVqoAJbA_QRYBeyz1U7Spd5z:YhhvcmgJUpmoTpRrONxQxahY-ws="
-      }
-    ];
+    // Load Excel file directly or fallback to built-in JSON
+    let CARD_DATABASE = [];
 
     const MAX_DECK_SIZE = 50;
     const MAX_COPIES_PER_CARD = 3;
@@ -328,18 +245,45 @@
     };
 
     // ==========================================
-    // 2. APPLICATION LOGIC & STATE
+    // APPLICATION LOGIC & STATE
     // ==========================================
     const app = {
       deck: {},
       search: '',
       colorFilter: 'All',
       levelFilter: 'All',
-      cardSize: 'large', // 'normal', 'large', 'xlarge'
+      setFilter: 'All',
+      cardSize: 'large',
       drawnHand: [],
       
       init() {
         this.setupEventListeners();
+        this.loadDefaultExcelOrFallback();
+      },
+
+      async loadDefaultExcelOrFallback() {
+        // Automatically attempt to fetch the companion excel file if served via web server
+        try {
+          const res = await fetch('marvel_hero_rush_cards (2) (1).xlsx');
+          if (res.ok) {
+            const blob = await res.arrayBuffer();
+            const workbook = XLSX.read(new Uint8Array(blob), { type: 'array' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(sheet);
+            CARD_DATABASE = rows.map((row, idx) => ({
+              id: `mhr-${idx+1}`,
+              name: String(row['Card Name'] || row.Name || `Card ${idx+1}`).trim(),
+              level: parseInt(row.Level || 1, 10),
+              color: String(row.Colour || row.Color || 'Red').trim().charAt(0).toUpperCase() + String(row.Colour || row.Color || 'Red').trim().slice(1).toLowerCase(),
+              set: String(row['Card Set'] || row.Set || 'BP01').trim(),
+              image: String(row['Card Image'] || row.Image || '').trim()
+            }));
+            this.renderAll();
+            return;
+          }
+        } catch (e) {}
+
+        // Fallback: render catalog UI
         this.renderAll();
       },
 
@@ -352,7 +296,7 @@
         const card = CARD_DATABASE.find(c => c.id === cardId);
         if (!card || !card.image) return;
 
-        document.getElementById('zoom-card-name').innerText = `${card.name} (Lv.${card.level} • ${card.color})`;
+        document.getElementById('zoom-card-name').innerText = `${card.name} (Lv.${card.level} • ${card.color} • ${card.set})`;
         document.getElementById('zoom-card-img').src = card.image;
 
         const modal = document.getElementById('art-zoom-modal');
@@ -511,18 +455,18 @@
               return;
             }
 
-            const newCards = jsonData.map((row, idx) => ({
+            CARD_DATABASE = jsonData.map((row, idx) => ({
               id: `imported-${Date.now()}-${idx}`,
-              name: row.Name || row.name || `Card ${idx + 1}`,
+              name: String(row['Card Name'] || row.Name || `Card ${idx + 1}`).trim(),
               level: parseInt(row.Level || row.level || 1, 10),
-              color: row.Color || row.color || 'Red',
-              image: row.Image || row.image || ''
+              color: String(row.Colour || row.Color || 'Red').trim().charAt(0).toUpperCase() + String(row.Colour || row.Color || 'Red').trim().slice(1).toLowerCase(),
+              set: String(row['Card Set'] || row.Set || 'BP01').trim(),
+              image: String(row['Card Image'] || row.Image || '').trim()
             }));
 
-            CARD_DATABASE = newCards;
             app.deck = {};
             app.renderAll();
-            app.showToast(`Successfully loaded ${newCards.length} cards!`);
+            app.showToast(`Successfully loaded ${CARD_DATABASE.length} cards from Excel!`);
           } catch (err) {
             console.error(err);
             alert('Failed to parse Excel file.');
@@ -540,7 +484,6 @@
           }
         });
 
-        // Fisher-Yates Shuffle
         for (let i = flattenedDeck.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [flattenedDeck[i], flattenedDeck[j]] = [flattenedDeck[j], flattenedDeck[i]];
@@ -565,7 +508,6 @@
         setTimeout(() => modal.classList.add('hidden'), 300);
       },
 
-      // -- Renderers --
       renderAll() {
         this.renderSizeButtons();
         this.renderFilters();
@@ -619,6 +561,12 @@
         levelContainer.innerHTML = `<span class="text-xs text-slate-500 mr-1 font-medium">Level:</span>` + ['All', '1', '2', '3', '4', '5', '6'].map(lv => 
           `<button onclick="app.levelFilter='${lv}'; app.renderAll()" class="text-xs w-7 h-7 rounded-lg flex items-center justify-center transition font-semibold ${this.levelFilter === lv ? 'bg-amber-500 text-slate-950 font-bold shadow-md' : 'bg-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-700'}">${lv}</button>`
         ).join('');
+
+        const sets = ['All', ...Array.from(new Set(CARD_DATABASE.map(c => c.set))).filter(Boolean).sort()];
+        const setContainer = document.getElementById('set-filters');
+        setContainer.innerHTML = `<span class="text-xs text-slate-500 mr-1 font-medium">Set:</span>` + sets.map(st => 
+          `<button onclick="app.setFilter='${st}'; app.renderAll()" class="text-xs px-2 py-1 rounded-lg flex items-center justify-center transition font-semibold ${this.setFilter === st ? 'bg-amber-500 text-slate-950 font-bold shadow-md' : 'bg-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-700'}">${st}</button>`
+        ).join('');
       },
 
       renderColorLockBanner() {
@@ -645,12 +593,12 @@
           const matchesSearch = c.name.toLowerCase().includes(searchLower);
           const matchesColor = this.colorFilter === 'All' || c.color === this.colorFilter;
           const matchesLevel = this.levelFilter === 'All' || c.level === parseInt(this.levelFilter, 10);
-          return matchesSearch && matchesColor && matchesLevel;
+          const matchesSet = this.setFilter === 'All' || c.set === this.setFilter;
+          return matchesSearch && matchesColor && matchesLevel && matchesSet;
         });
 
         const container = document.getElementById('catalog-grid');
         
-        // Dynamic grid columns and image height based on cardSize setting
         let gridCols = 'grid-cols-1 sm:grid-cols-2';
         let imgHeight = 'h-80';
 
@@ -671,7 +619,7 @@
           container.innerHTML = `
             <div class="col-span-full py-20 text-center text-slate-500 flex flex-col items-center gap-2">
               <i data-lucide="inbox" class="w-10 h-10 stroke-1"></i>
-              <p class="text-sm">No cards match the active filters.</p>
+              <p class="text-sm">No cards loaded yet. Click <strong>Upload Excel</strong> to select your spreadsheet.</p>
             </div>`;
           return;
         }
@@ -685,7 +633,6 @@
           return `
             <div class="bg-slate-900 border-2 ${theme.border} ${!colorAllowed ? 'opacity-50 grayscale-[40%]' : ''} rounded-2xl p-4 flex flex-col justify-between transition-all duration-200 group shadow-md hover:shadow-xl">
               <div>
-                <!-- Top Card Info -->
                 <div class="flex items-start justify-between gap-2 mb-3">
                   <div class="flex items-center gap-2.5">
                     <span class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-black text-xs flex items-center justify-center shrink-0 border border-amber-500/40 shadow">
@@ -693,10 +640,13 @@
                     </span>
                     <div>
                       <h4 class="text-sm font-bold text-white leading-tight">${card.name}</h4>
-                      <span class="text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5 mt-0.5">
-                        <span class="w-2 h-2 rounded-full ${theme.dot}"></span>
-                        <span class="text-slate-400 font-medium">${card.color}</span>
-                      </span>
+                      <div class="text-[10px] uppercase font-bold tracking-wider flex items-center gap-2 mt-0.5">
+                        <span class="flex items-center gap-1">
+                          <span class="w-2 h-2 rounded-full ${theme.dot}"></span>
+                          <span class="text-slate-400 font-medium">${card.color}</span>
+                        </span>
+                        <span class="text-slate-500 font-mono px-1 rounded bg-slate-950 border border-slate-800">${card.set}</span>
+                      </div>
                     </div>
                   </div>
                   <button 
@@ -708,7 +658,6 @@
                   </button>
                 </div>
 
-                <!-- Clickable High-Res Card Artwork Window -->
                 <div 
                   onclick="app.openArtZoom('${card.id}')"
                   class="relative w-full ${imgHeight} rounded-xl overflow-hidden mb-3 border border-slate-800 bg-slate-950 flex items-center justify-center p-1.5 shadow-inner cursor-zoom-in group-hover:border-slate-700 transition"
@@ -725,7 +674,6 @@
                 </div>
               </div>
 
-              <!-- Action Bar -->
               <div class="flex items-center justify-end pt-2.5 border-t border-slate-800/90 gap-2">
                 ${inDeck > 0 ? `<span class="text-xs font-mono font-bold text-amber-400 mr-auto bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800">${inDeck}/${MAX_COPIES_PER_CARD} in deck</span>` : ''}
                 <button 
@@ -755,7 +703,6 @@
         progress.style.width = `${(total / MAX_DECK_SIZE) * 100}%`;
         progress.className = `h-full transition-all duration-300 ${total === MAX_DECK_SIZE ? 'bg-emerald-500' : 'bg-amber-500'}`;
 
-        // Level 1-6 Distribution Curve
         const levels = ['1', '2', '3', '4', '5', '6'];
         const maxCount = Math.max(...Object.values(stats.curve), 6);
         document.getElementById('level-curve-chart').innerHTML = levels.map(lv => {
@@ -771,14 +718,12 @@
             </div>`;
         }).join('');
 
-        // Color Count Badge
         const colorBadge = document.getElementById('deck-color-count-badge');
         colorBadge.innerText = `${activeColors.length}/${MAX_COLORS_PER_DECK} Colors`;
         colorBadge.className = `text-[10px] px-2.5 py-0.5 rounded-md font-mono font-bold border ${
           activeColors.length === 2 ? 'bg-amber-950/60 text-amber-300 border-amber-700' : 'bg-slate-800 text-slate-300 border-slate-700'
         }`;
 
-        // Color Breakdown Grid
         document.getElementById('color-breakdown').innerHTML = `
           <div class="bg-slate-950/80 p-2.5 rounded-lg border border-red-900/40 flex flex-col items-center gap-1 ${stats.colors.Red > 0 ? 'ring-1 ring-red-500/50' : 'opacity-40'}">
             <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
@@ -837,7 +782,7 @@
                 ` : ''}
                 <div>
                   <span class="text-xs font-semibold text-slate-200 block truncate max-w-[170px]">${card.name}</span>
-                  <span class="text-[10px] text-slate-400 font-mono">${card.color}</span>
+                  <span class="text-[10px] text-slate-400 font-mono">${card.color} • ${card.set}</span>
                 </div>
               </div>
               <div class="flex items-center gap-2">
@@ -873,7 +818,7 @@
               </div>
               <div class="flex items-center justify-center gap-1.5 mt-3 pt-2.5 border-t border-slate-800/80">
                 <span class="w-2 h-2 rounded-full ${theme.dot}"></span>
-                <span class="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-bold">${card.color}</span>
+                <span class="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-bold">${card.color} • ${card.set}</span>
               </div>
             </div>`;
         }).join('');
@@ -892,7 +837,6 @@
       }
     };
 
-    // Initialize App on DOM load
     document.addEventListener('DOMContentLoaded', () => {
       app.init();
     });
