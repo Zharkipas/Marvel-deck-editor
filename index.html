@@ -68,7 +68,7 @@
   <main class="flex-1 p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto w-full">
     
     <!-- Left: Card Browser -->
-    <section class="lg:col-span-7 flex flex-col gap-4">
+    <section class="lg:col-span-5 flex flex-col gap-4">
       <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col gap-3 shadow-sm">
         <div class="flex items-center gap-3">
           <div class="relative flex-1">
@@ -112,8 +112,24 @@
       <div id="catalog-grid" class="grid gap-4 overflow-y-auto max-h-[820px] pr-1.5 pb-6"></div>
     </section>
 
-    <!-- Right: Active Deck & Curve Analysis -->
-    <section class="lg:col-span-5 flex flex-col gap-4">
+    <!-- Middle: Deck List -->
+    <section class="lg:col-span-4 flex flex-col gap-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 flex items-center justify-between shadow-sm">
+        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="list" class="w-4 h-4 text-amber-400"></i> Deck List
+        </h2>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] text-slate-500 font-mono hidden sm:inline">Sorted by Level</span>
+          <button onclick="app.openDeckPreview()" id="btn-preview-deck" class="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-amber-300 border border-slate-700 transition font-medium" title="Preview deck as popout">
+            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Preview
+          </button>
+        </div>
+      </div>
+      <div id="deck-list" class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex-1 flex flex-col gap-2 max-h-[820px] overflow-y-auto"></div>
+    </section>
+
+    <!-- Right: Active Deck Stats & Curve Analysis -->
+    <section class="lg:col-span-3 flex flex-col gap-4">
       <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col gap-3 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
@@ -127,11 +143,12 @@
             <button onclick="app.clearDeck()" id="btn-clear" class="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-950/30 rounded-lg border border-transparent hover:border-rose-900 transition disabled:opacity-40" title="Clear Deck">
               <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
-            <button onclick="app.drawSampleHand()" id="btn-test-hand" class="flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white font-medium shadow-md transition">
-              <i data-lucide="eye" class="w-4 h-4"></i> Test Hand
-            </button>
           </div>
         </div>
+
+        <button onclick="app.drawSampleHand()" id="btn-test-hand" class="w-full flex items-center justify-center gap-1.5 text-xs px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white font-medium shadow-md transition">
+          <i data-lucide="eye" class="w-4 h-4"></i> Test Hand
+        </button>
 
         <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800">
           <div id="deck-progress" class="h-full bg-amber-500 transition-all duration-300" style="width: 0%"></div>
@@ -155,12 +172,9 @@
               0/2 Colors
             </span>
           </div>
-          <div class="grid grid-cols-4 gap-2 text-center text-xs" id="color-breakdown"></div>
+          <div class="grid grid-cols-2 gap-2 text-center text-xs" id="color-breakdown"></div>
         </div>
       </div>
-
-      <!-- Deck List -->
-      <div id="deck-list" class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex-1 flex flex-col gap-2 max-h-[500px] overflow-y-auto"></div>
     </section>
   </main>
 
@@ -203,6 +217,30 @@
           Close
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- Deck Preview / Edit Popout Modal -->
+  <div id="deck-preview-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity" onclick="app.closeDeckPreview()">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-6xl rounded-2xl p-6 shadow-2xl flex flex-col gap-5 transform scale-95 transition-transform max-h-[90vh]" id="deck-preview-content" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
+        <div>
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="layers" class="w-5 h-5 text-amber-400"></i> Deck Preview
+          </h3>
+          <p class="text-xs text-slate-400" id="deck-preview-stats"></p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="app.exportDeckImage()" class="flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/40 transition font-medium">
+            <i data-lucide="image-down" class="w-4 h-4"></i> Export
+          </button>
+          <button onclick="app.closeDeckPreview()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+      <p class="text-[11px] text-slate-500 -mt-2 shrink-0">Use the +/- controls on each card to edit how many copies are in your deck.</p>
+      <div id="deck-preview-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 overflow-y-auto pr-1.5"></div>
     </div>
   </div>
 
@@ -260,6 +298,7 @@
       setFilter: 'All',
       cardSize: 'large',
       drawnHand: [],
+      deckPreviewOpen: false,
       
       init() {
         this.setupEventListeners();
@@ -673,6 +712,81 @@
         setTimeout(() => modal.classList.add('hidden'), 300);
       },
 
+      openDeckPreview() {
+        if (this.getTotalCards() === 0) return;
+        this.deckPreviewOpen = true;
+        this.renderDeckPreview();
+        const modal = document.getElementById('deck-preview-modal');
+        const content = document.getElementById('deck-preview-content');
+        modal.classList.remove('hidden');
+        void modal.offsetWidth;
+        modal.classList.remove('opacity-0');
+        content.classList.remove('scale-95');
+      },
+
+      closeDeckPreview() {
+        this.deckPreviewOpen = false;
+        const modal = document.getElementById('deck-preview-modal');
+        const content = document.getElementById('deck-preview-content');
+        modal.classList.add('opacity-0');
+        content.classList.add('scale-95');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+      },
+
+      renderDeckPreview() {
+        const list = this.getDeckCardList();
+        const total = this.getTotalCards();
+        const stats = this.getStats();
+
+        const statsEl = document.getElementById('deck-preview-stats');
+        if (statsEl) {
+          statsEl.innerHTML = `${total}/${MAX_DECK_SIZE} Cards &bull; Avg Level <span class="text-amber-400 font-mono font-bold">Lv. ${stats.avgLevel}</span>`;
+        }
+
+        const grid = document.getElementById('deck-preview-grid');
+        if (!grid) return;
+
+        if (list.length === 0) {
+          grid.innerHTML = `
+            <div class="col-span-full py-20 text-center text-slate-500 flex flex-col items-center gap-2">
+              <i data-lucide="layers" class="w-10 h-10 stroke-1"></i>
+              <p class="text-sm">Deck is empty.</p>
+            </div>`;
+          if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+          return;
+        }
+
+        grid.innerHTML = list.map(card => {
+          const theme = COLOR_THEMES[card.color] || COLOR_THEMES.Red;
+          const atMax = card.qty >= MAX_COPIES_PER_CARD || total >= MAX_DECK_SIZE;
+          return `
+            <div class="bg-slate-950 border-2 ${theme.border} rounded-2xl p-3 flex flex-col gap-2 shadow-md">
+              <div class="relative w-full h-48 rounded-xl overflow-hidden border border-slate-800 bg-slate-900 flex items-center justify-center p-1.5">
+                <span class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 text-[11px] font-mono font-black border border-amber-500/30 z-10">Lv.${card.level}</span>
+                ${card.image ? `
+                  <img src="${card.image}" alt="${card.name}" referrerpolicy="no-referrer" class="w-full h-full object-contain" onerror="this.style.display='none'" />
+                ` : `<span class="text-xs text-slate-500">No Image</span>`}
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-200 leading-tight truncate" title="${card.name}">${card.name}</h4>
+                <span class="text-[10px] text-slate-400 font-mono flex items-center gap-1 mt-0.5">
+                  <span class="w-2 h-2 rounded-full ${theme.dot}"></span> ${card.color} • ${card.set}
+                </span>
+              </div>
+              <div class="flex items-center justify-center gap-2.5 pt-2 border-t border-slate-800/80 mt-auto">
+                <button onclick="app.removeCard('${card.id}')" class="w-7 h-7 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition">
+                  <i data-lucide="minus" class="w-4 h-4"></i>
+                </button>
+                <span class="text-sm font-mono font-bold text-amber-400 w-6 text-center">${card.qty}</span>
+                <button onclick="app.addCard('${card.id}')" ${atMax ? 'disabled' : ''} class="w-7 h-7 rounded-md bg-slate-800 hover:bg-slate-700 disabled:opacity-30 text-slate-300 flex items-center justify-center transition">
+                  <i data-lucide="plus" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>`;
+        }).join('');
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+      },
+
       renderAll() {
         this.renderSizeButtons();
         this.renderFilters();
@@ -680,6 +794,7 @@
         this.renderCatalog();
         this.renderDeckStats();
         this.renderDeckList();
+        if (this.deckPreviewOpen) this.renderDeckPreview();
         if (window.lucide && window.lucide.createIcons) {
           lucide.createIcons();
         }
@@ -866,6 +981,7 @@
         document.getElementById('btn-test-hand').disabled = total < 5;
         document.getElementById('btn-export').disabled = total === 0;
         document.getElementById('btn-export-image').disabled = total === 0;
+        document.getElementById('btn-preview-deck').disabled = total === 0;
 
         const progress = document.getElementById('deck-progress');
         progress.style.width = `${(total / MAX_DECK_SIZE) * 100}%`;
