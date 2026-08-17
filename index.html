@@ -179,7 +179,7 @@
   </main>
 
   <!-- Fullscreen Single Card Lightbox Modal -->
-  <div id="art-zoom-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200" onclick="app.closeArtZoom()">
+  <div id="art-zoom-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[60] flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200" onclick="app.closeArtZoom()">
     <div class="relative max-w-lg w-full flex flex-col items-center gap-3 p-4 bg-slate-900/90 border border-slate-800 rounded-2xl shadow-2xl" onclick="event.stopPropagation()">
       <div class="w-full flex items-center justify-between border-b border-slate-800 pb-2">
         <h3 id="zoom-card-name" class="font-bold text-white text-base"></h3>
@@ -760,11 +760,18 @@
           const theme = COLOR_THEMES[card.color] || COLOR_THEMES.Red;
           const atMax = card.qty >= MAX_COPIES_PER_CARD || total >= MAX_DECK_SIZE;
           return `
-            <div class="bg-slate-950 border-2 ${theme.border} rounded-2xl p-3 flex flex-col gap-2 shadow-md">
-              <div class="relative w-full h-48 rounded-xl overflow-hidden border border-slate-800 bg-slate-900 flex items-center justify-center p-1.5">
+            <div class="bg-slate-950 border-2 ${theme.border} rounded-2xl p-3 flex flex-col gap-2 shadow-md group">
+              <div
+                onclick="app.openArtZoom('${card.id}')"
+                class="relative w-full h-48 rounded-xl overflow-hidden border border-slate-800 bg-slate-900 flex items-center justify-center p-1.5 cursor-zoom-in group-hover:border-slate-700 transition"
+                title="Click to view full image"
+              >
                 <span class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 text-[11px] font-mono font-black border border-amber-500/30 z-10">Lv.${card.level}</span>
+                <span class="absolute top-2 right-2 p-1 rounded-md bg-slate-950/80 text-slate-300 border border-slate-700 z-10 opacity-0 group-hover:opacity-100 transition">
+                  <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+                </span>
                 ${card.image ? `
-                  <img src="${card.image}" alt="${card.name}" referrerpolicy="no-referrer" class="w-full h-full object-contain" onerror="this.style.display='none'" />
+                  <img src="${card.image}" alt="${card.name}" referrerpolicy="no-referrer" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="this.style.display='none'" />
                 ` : `<span class="text-xs text-slate-500">No Image</span>`}
               </div>
               <div>
